@@ -13,13 +13,27 @@ import sys
 
 from textblob import TextBlob
 
-# Add simple_google_reviews to path
+# Add modules to path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'nlp_pipeline'))
+
 try:
     from simple_google_reviews import GoogleReviewsFetcher
     google_fetcher = GoogleReviewsFetcher()
 except:
     google_fetcher = None
+
+# Try to load RAG system (optional, free upgrade)
+try:
+    from rag_system import ReviewRAG
+    rag_system = ReviewRAG()
+    RAG_AVAILABLE = True
+    print("✅ RAG System loaded! (Free semantic search enabled)")
+except Exception as e:
+    rag_system = None
+    RAG_AVAILABLE = False
+    print(f"⚠️  RAG not available: {e}")
+    print("   Install with: pip install sentence-transformers chromadb")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -143,6 +157,20 @@ def detect_emotions(text: str, sentiment: str) -> EmotionResult:
 def generate_ai_response(text: str, sentiment: str, emotion: str, business_name: str) -> AIResponse:
     """Generate appropriate response based on sentiment and emotion"""
     
+    # Try RAG-based response first (better, context-aware)
+    if RAG_AVAILABLE and rag_system:
+        try:
+            response_text = rag_system.generate_response(text, sentiment, business_name)
+            tone = "apologetic" if sentiment == "NEGATIVE" else "grateful" if sentiment == "POSITIVE" else "professional"
+            return AIResponse(
+                response=response_text,
+                tone=tone,
+                confidence=0.90  # Higher confidence with RAG
+            )
+        except Exception as e:
+            print(f"⚠️  RAG response failed, using fallback: {e}")
+    
+    # Fallback to template-based responses
     responses = {
         "POSITIVE": {
             "joy": f"Thank you so much for the wonderful feedback! We're thrilled you had such a great experience at {business_name}. We look forward to serving you again soon!",
@@ -206,20 +234,10 @@ async def health_check():
 async def analyze_review(review: ReviewInput):
     """
     Analyze a single review
-    
-    Returns:
-    - Sentiment analysis (POSITIVE/NEGATIVE/NEUTRAL)
-    - Emotion detection (joy, anger, disappointment, etc.)
-    - AI-generated response
     """
     try:
-        # Analyze sentiment
         sentiment_result = analyze_sentiment(review.text)
-        
-        # Detect emotions
         emotion_result = detect_emotions(review.text, sentiment_result.label)
-        
-        # Generate AI response
         ai_response = generate_ai_response(
             review.text,
             sentiment_result.label,
@@ -227,22 +245,34 @@ async def analyze_review(review: ReviewInput):
             review.business_name
         )
         
-        return AnalysisResponse(
-            success=True,
-            sentiment=sentiment_result,
-            emotions=emotion_result,
-            ai_response=ai_response,
-            timestamp=datetime.now().isoformat()
-        )
+        # Store in RAG system for future context (if available)
+        if RAG_AVAILABLE and rag_system:
+            try:
+                rag_system.add_review(review.text, {
+                    'sentiment': sentiment_result.label,
+                    'rating': review.rating,
+                    'business': review.business_name,
+                    'platform': review.platform
+                })
+            except Exception as e:
+                print(f"⚠️  Failed to store in RAG: {e}")
+        
+        return {
+            "success": True,
+            "sentiment": sentiment_result.dict(),
+            "emotions": emotion_result.dict(),
+            "ai_response": ai_response.dict(),
+            "rag_enabled": RAG_AVAILABLE,
+            "timestamp": datetime.now().isoformat()
+        }
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/api/bulk-analyze")
 async def bulk_analyze(reviews: List[ReviewInput]):
     """
     Analyze multiple reviews at once
-    
     Returns analysis for all reviews
     """
     try:
@@ -312,20 +342,70 @@ async def fetch_reviews(business_name: str, location: Optional[str] = None):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/api/search-similar")
+async def search_similar_reviews(query: str, n_results: int = 5, sentiment_filter: Optional[str] = None):
+    """
+    Search for similar reviews using semantic search (RAG)
+    """
+    if not RAG_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail="RAG system not available. Install with: pip install sentence-transformers chromadb"
+        )
+    
+    try:
+        similar = rag_system.find_similar_reviews(query, n_results, sentiment_filter)
+        return {
+            "success": True,
+            "query": query,
+            "results": similar,
+            "count": len(similar)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/rag-stats")
+async def get_rag_stats():
+    """Get RAG database statistics"""
+    if not RAG_AVAILABLE:
+        return {
+            "rag_available": False,
+            "message": "Install with: pip install sentence-transformers chromadb"
+        }
+    
+    try:
+        stats = rag_system.get_stats()
+        return {
+            "rag_available": True,
+            "stats": stats
+        }
+    except Exception as e:
+        return {
+            "rag_available": False,
+            "error": str(e)
+        }
+
 @app.get("/api/stats")
 async def get_stats():
     """Get API statistics"""
+    features = [
+        "Sentiment Analysis",
+        "Emotion Detection",
+        "AI Response Generation",
+        "Bulk Processing",
+        "Fetch Reviews (Demo)"
+    ]
+    
+    if RAG_AVAILABLE:
+        features.append("RAG Semantic Search (Free)")
+        features.append("Context-Aware Responses")
+    
     return {
         "version": "2.0.0",
-        "nlp_engine": "TextBlob",
+        "nlp_engine": "TextBlob + RAG" if RAG_AVAILABLE else "TextBlob",
         "status": "operational",
-        "features": [
-            "Sentiment Analysis",
-            "Emotion Detection",
-            "AI Response Generation",
-            "Bulk Processing",
-            "Fetch Reviews (Demo)"
-        ],
+        "rag_enabled": RAG_AVAILABLE,
+        "features": features,
         "timestamp": datetime.now().isoformat()
     }
 

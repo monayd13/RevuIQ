@@ -1,0 +1,11 @@
+# RAG System Dependencies (Free & Open Source)
+# Install with: pip install -r requirements_rag.txt
+
+# Sentence Transformers - For generating embeddings
+sentence-transformers>=2.2.2
+
+# ChromaDB - Local vector database
+chromadb>=0.4.0
+
+# Optional: Faster processing
+torch>=2.0.0  # For GPU acceleration (optional)
