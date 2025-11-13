@@ -1,0 +1,35 @@
+# Dockerfile for RevuIQ Backend
+FROM python:3.13-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements
+COPY backend/requirements.txt .
+COPY requirements.txt ./requirements_base.txt
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements_base.txt
+RUN pip install sqlalchemy psycopg2-binary
+
+# Download TextBlob corpora
+RUN python -m textblob.download_corpora
+
+# Copy application code
+COPY backend/ ./backend/
+COPY nlp_pipeline/ ./nlp_pipeline/
+
+# Set Python path
+ENV PYTHONPATH=/app
+
+# Expose port
+EXPOSE 8000
+
+# Run the application
+CMD ["python", "backend/main_complete.py"]

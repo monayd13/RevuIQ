@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  database:
+    image: postgres:15-alpine
+    container_name: revuiq-database
+    environment:
+      POSTGRES_USER: revuiq
+      POSTGRES_PASSWORD: revuiq_password
+      POSTGRES_DB: revuiq_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U revuiq"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: revuiq-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://revuiq:revuiq_password@database:5432/revuiq_db
+      - GOOGLE_PLACES_API_KEY=${GOOGLE_PLACES_API_KEY}
+      - YELP_API_KEY=${YELP_API_KEY}
+      - META_ACCESS_TOKEN=${META_ACCESS_TOKEN}
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app/backend
+      - ./nlp_pipeline:/app/nlp_pipeline
+    restart: unless-stopped
+
+  # Frontend Dashboard
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: revuiq-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
