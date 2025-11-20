@@ -1,153 +1,56 @@
-# 🧠 RevuIQ - AI-Powered Review Management System
+# RevuIQ
 
-**Centralized NLP-Powered Platform for Multi-Platform Review Analysis & Response**
+Analyze restaurant reviews and track customer sentiment.
 
-## 🎯 Project Overview
+## What it does
 
-RevuIQ uses Natural Language Processing to automate customer review management across Google, Yelp, TripAdvisor, and Meta platforms.
+Pulls reviews from Google Places and analyzes them to understand what customers think. Shows sentiment (positive/negative), common topics mentioned, and overall ratings.
 
-### Key Features
-- 📊 **Sentiment Analysis** - Classify reviews as Positive, Neutral, or Negative
-- 😊 **Emotion Detection** - Identify emotional tone (anger, joy, disappointment, etc.)
-- 🔍 **Aspect Extraction** - Detect what customers are talking about (service, food, price)
-- ✍️ **AI Response Generation** - Create brand-consistent, empathetic replies
-- 👤 **Human-in-the-Loop** - Approve/edit AI suggestions before posting
-- 📈 **Analytics Dashboard** - Visualize trends and insights
+## Features
 
-## 🛠️ Tech Stack
+- Fetch real reviews from Google Places API
+- Sentiment analysis (positive, neutral, negative)
+- Emotion detection
+- Analytics dashboard with charts
+- Filter reviews by time period
 
-**Backend:**
-- FastAPI (Python)
-- PostgreSQL (Supabase)
-- Hugging Face Transformers
+## Tech
 
-**Frontend:**
-- Next.js
-- Tailwind CSS
-- Chart.js
+- Backend: FastAPI + SQLite
+- Frontend: Next.js + TailwindCSS
+- Charts: Recharts
+- Icons: Lucide React
 
-**NLP Models:**
-- RoBERTa (Sentiment Analysis)
-- GoEmotions (Emotion Detection)
-- Flan-T5 (Response Generation)
-- BART/T5 (Summarization)
+## Setup
 
-## 📦 Project Structure
+1. Get a Google Places API key from Google Cloud Console
+2. Add it to `backend/.env`:
+   ```
+   GOOGLE_PLACES_API_KEY=your_key_here
+   ```
+3. Run the startup script:
+   ```bash
+   ./start_all.sh
+   ```
 
-```
-RevuIQ/
-├── nlp_pipeline/           # Core NLP components
-│   ├── sentiment_analyzer.py
-│   ├── emotion_detector.py
-│   ├── aspect_extractor.py
-│   ├── response_generator.py
-│   └── demo.py
-├── backend/                # FastAPI server
-├── frontend/               # Next.js app
-├── tests/                  # Unit tests
-├── requirements.txt
-└── README.md
-```
+## Usage
 
-## 🚀 Quick Start
+After starting the services:
 
-### 1. Install Dependencies
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- API Docs: http://localhost:8000/docs
 
-```bash
-pip install -r requirements.txt
-```
+Add restaurants, fetch their Google reviews, and view analytics.
 
-### 2. Run NLP Demo
+## Scripts
 
-```bash
-cd nlp_pipeline
-python demo.py
-```
+- `./start_all.sh` - Start both backend and frontend
+- `./stop_all.sh` - Stop all services
+- `./check_status.sh` - Check if services are running
 
-### 3. Test with Sample Review
+## Notes
 
-```python
-from nlp_pipeline.sentiment_analyzer import analyze_sentiment
-from nlp_pipeline.response_generator import generate_response
-
-review = "The coffee was great but service was slow."
-sentiment = analyze_sentiment(review)
-reply = generate_response(review, sentiment)
-
-print(f"Sentiment: {sentiment}")
-print(f"AI Reply: {reply}")
-```
-
-## 📊 NLP Pipeline Workflow
-
-```
-Review Input
-    ↓
-[Preprocessing] → Tokenization, Cleaning
-    ↓
-[Sentiment Analysis] → Positive/Neutral/Negative
-    ↓
-[Emotion Detection] → Joy, Anger, Disappointment, etc.
-    ↓
-[Aspect Extraction] → Service, Food, Price, Staff
-    ↓
-[Response Generation] → AI-generated reply
-    ↓
-[Human Approval] → Manager reviews & approves
-    ↓
-Post to Platform
-```
-
-## 🧪 Development Phases
-
-### ✅ Phase 1: NLP Proof of Concept (Current)
-- [x] Sentiment analysis
-- [x] Emotion detection
-- [x] Response generation
-- [x] Demo script
-
-### 🔄 Phase 2: Backend API (Next)
-- [ ] FastAPI endpoints
-- [ ] Database schema
-- [ ] Review storage
-
-### 📅 Phase 3: Frontend Dashboard
-- [ ] Next.js UI
-- [ ] Review management interface
-- [ ] Analytics visualizations
-
-### 🔌 Phase 4: API Integrations
-- [ ] Google Places API
-- [ ] Yelp Fusion API
-- [ ] Meta Graph API
-
-## 📈 Evaluation Metrics
-
-- **Sentiment Accuracy**: F1-score on labeled dataset
-- **Response Relevance**: BLEU/ROUGE scores
-- **Approval Rate**: % of AI replies accepted without edits
-- **Response Time**: Average time saved vs manual handling
-
-## 🤝 Contributing
-
-This is an educational NLP project demonstrating:
-- End-to-end ML pipeline design
-- Transformer model integration
-- Ethical AI with human oversight
-- Real-world business application
-
-## 📝 License
-
-MIT License - Educational Project
-
-## 🎓 Learning Outcomes
-
-- NLP pipeline architecture
-- Transformer model fine-tuning
-- API design and integration
-- Human-in-the-loop AI systems
-- Data visualization and UX
-
----
-
-**Built with ❤️ for demonstrating practical NLP applications**
+- Google Places API only returns 5 reviews per restaurant
+- Reviews are analyzed using mock NLP (simplified version)
+- Database is SQLite stored in `backend/revuiq.db`
