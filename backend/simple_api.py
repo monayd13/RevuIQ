@@ -476,7 +476,19 @@ async def get_restaurant_analytics(
                 "success": True,
                 "restaurant_id": restaurant_id,
                 "period_days": days,
-                "message": "No reviews found"
+                "total_reviews": 0,
+                "average_rating": 0.0,
+                "sentiment_distribution": {"POSITIVE": 0, "NEUTRAL": 0, "NEGATIVE": 0},
+                "top_emotions": {},
+                "top_aspects": {},
+                "rating_distribution": {
+                    "5_star": 0,
+                    "4_star": 0,
+                    "3_star": 0,
+                    "2_star": 0,
+                    "1_star": 0
+                },
+                "message": "No reviews found in this time period"
             }
         
         sentiment_dist = {"POSITIVE": 0, "NEUTRAL": 0, "NEGATIVE": 0}
