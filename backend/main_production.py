@@ -23,6 +23,14 @@ try:
 except:
     google_fetcher = None
 
+try:
+    from yelp_reviews import YelpReviewsFetcher
+    yelp_fetcher = YelpReviewsFetcher()
+    print("✅ Yelp API loaded! (FREE - No credit card needed)")
+except:
+    yelp_fetcher = None
+    print("⚠️  Yelp API not available")
+
 # Try to load RAG system (optional, free upgrade)
 try:
     from rag_system import ReviewRAG
@@ -306,22 +314,29 @@ async def bulk_analyze(reviews: List[ReviewInput]):
         raise HTTPException(status_code=500, detail=f"Bulk analysis failed: {str(e)}")
 
 @app.post("/api/fetch-reviews")
-async def fetch_reviews(business_name: str, location: Optional[str] = None):
+async def fetch_reviews(business_name: str, location: Optional[str] = None, platform: str = "yelp"):
     """
-    Fetch reviews from Google Places API (or demo if no API key)
+    Fetch reviews from Yelp (FREE) or Google Places API
+    Platform options: 'yelp' (default, FREE), 'google'
     """
     try:
-        # Try to fetch real reviews from Google
-        if google_fetcher and google_fetcher.api_key:
-            print(f"🔍 Fetching real reviews for: {business_name}")
+        # Try Yelp first (FREE - No credit card!)
+        if platform == "yelp" and yelp_fetcher and yelp_fetcher.api_key:
+            print(f"🔍 Fetching real reviews from Yelp for: {business_name}")
+            reviews = yelp_fetcher.fetch_business_reviews(business_name, location or "")
+            mode = "real"
+            note = "Fetched from Yelp Fusion API (FREE)"
+        # Fallback to Google
+        elif platform == "google" and google_fetcher and google_fetcher.api_key:
+            print(f"🔍 Fetching real reviews from Google for: {business_name}")
             reviews = google_fetcher.fetch_restaurant_reviews(business_name, location or "")
             mode = "real"
             note = "Fetched from Google Places API"
         else:
             print(f"⚠️  No API key - using demo reviews")
-            reviews = google_fetcher._get_demo_reviews() if google_fetcher else []
+            reviews = yelp_fetcher._get_demo_reviews() if yelp_fetcher else []
             mode = "demo"
-            note = "Demo mode - Add GOOGLE_PLACES_API_KEY to .env for real reviews"
+            note = "Demo mode - Add YELP_API_KEY to .env for FREE real reviews (no credit card!)"
         
         # Count by platform
         platform_counts = {}

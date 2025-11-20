@@ -12,14 +12,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Database URL
+# Database URL - Use SQLite by default
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://user:password@localhost:5432/revuiq"
+    "sqlite:///./revuiq.db"
 )
 
 # Create engine
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
