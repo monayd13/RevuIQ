@@ -80,13 +80,25 @@ class Review(Base):
     
     # Response
     ai_response = Column(Text)
-    human_response = Column(Text)
-    response_status = Column(String, default="pending")  # pending, approved, posted
-    responded_at = Column(DateTime)
+    response_tone = Column(String)
+    response_confidence = Column(Float)
+    human_approved = Column(Boolean, default=False)
+    final_response = Column(Text)
+    response_posted = Column(Boolean, default=False)
+    posted_at = Column(DateTime)
+    
+    # Review approval/verification
+    is_genuine = Column(Boolean, default=None, nullable=True)
+    approval_status = Column(String, default="pending")  # pending, approved, rejected
+    approved_by = Column(String)
+    approval_notes = Column(Text)
+    approved_at = Column(DateTime)
     
     # Metadata
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    processed = Column(Boolean, default=False)
+    primary_emotion = Column(String)
     
     # Relationships
     business = relationship("Business", back_populates="reviews")

@@ -35,7 +35,7 @@ class Review(Base):
     # Review details
     platform = Column(String(50), nullable=False)  # google, yelp, etc.
     platform_review_id = Column(String(255), unique=True)
-    author = Column(String(255))
+    author_name = Column(String(255))
     rating = Column(Float)
     text = Column(Text, nullable=False)
     review_date = Column(DateTime)
@@ -47,6 +47,7 @@ class Review(Base):
     subjectivity = Column(Float)
     primary_emotion = Column(String(50))
     emotion_confidence = Column(Float)
+    emotions = Column(Text)  # JSON string of all emotions
     aspects = Column(Text)  # JSON string of extracted aspects
     
     # Response management
@@ -57,6 +58,13 @@ class Review(Base):
     final_response = Column(Text)  # After human editing
     response_posted = Column(Boolean, default=False)
     posted_at = Column(DateTime)
+    
+    # Review approval/verification
+    is_genuine = Column(Boolean, default=None, nullable=True)  # None=pending, True=genuine, False=fake
+    approval_status = Column(String(20), default="pending")  # pending, approved, rejected
+    approved_by = Column(String(255))  # Username who approved/rejected
+    approval_notes = Column(Text)  # Notes about why approved/rejected
+    approved_at = Column(DateTime)
     
     # Metadata
     created_at = Column(DateTime, default=datetime.utcnow)

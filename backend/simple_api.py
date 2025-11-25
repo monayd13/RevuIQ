@@ -205,6 +205,31 @@ async def get_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.delete("/api/restaurants/{restaurant_id}")
+async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db)):
+    """Delete a restaurant and all its reviews"""
+    try:
+        business = db.query(Business).filter(Business.id == restaurant_id).first()
+        if not business:
+            raise HTTPException(status_code=404, detail="Restaurant not found")
+        
+        # Delete all reviews for this restaurant first
+        db.query(Review).filter(Review.business_id == restaurant_id).delete()
+        
+        # Delete the restaurant
+        db.delete(business)
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": f"Restaurant '{business.name}' and all its reviews deleted successfully"
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ==================== REVIEW ENDPOINTS ====================
 
 @app.post("/api/reviews")
@@ -642,6 +667,200 @@ async def get_overall_stats(db: Session = Depends(get_db)):
                 "post_rate": 0
             },
             "average_rating": round(avg_rating, 2)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== REVIEW APPROVAL ENDPOINTS ====================
+
+class ReviewApproval(BaseModel):
+    is_genuine: bool
+    approval_notes: Optional[str] = ""
+    approved_by: str = "admin"
+
+@app.get("/api/reviews/pending")
+async def get_pending_reviews(db: Session = Depends(get_db)):
+    """Get all reviews pending approval"""
+    try:
+        reviews = db.query(Review).filter(
+            Review.approval_status == "pending"
+        ).order_by(Review.created_at.desc()).all()
+        
+        return {
+            "success": True,
+            "count": len(reviews),
+            "reviews": [
+                {
+                    "id": r.id,
+                    "business_id": r.business_id,
+                    "author": r.author_name,
+                    "rating": r.rating,
+                    "text": r.text,
+                    "review_date": r.review_date.isoformat() if r.review_date else None,
+                    "sentiment": r.sentiment,
+                    "sentiment_score": r.sentiment_score,
+                    "primary_emotion": r.primary_emotion,
+                    "created_at": r.created_at.isoformat() if r.created_at else None,
+                    "approval_status": r.approval_status
+                }
+                for r in reviews
+            ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/reviews/{review_id}/approve")
+async def approve_review(
+    review_id: int,
+    approval: ReviewApproval,
+    db: Session = Depends(get_db)
+):
+    """Approve or reject a review"""
+    try:
+        review = db.query(Review).filter(Review.id == review_id).first()
+        if not review:
+            raise HTTPException(status_code=404, detail="Review not found")
+        
+        review.is_genuine = approval.is_genuine
+        review.approval_status = "approved" if approval.is_genuine else "rejected"
+        review.approved_by = approval.approved_by
+        review.approval_notes = approval.approval_notes
+        review.approved_at = datetime.utcnow()
+        
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": f"Review {'approved' if approval.is_genuine else 'rejected'} successfully",
+            "review_id": review_id,
+            "status": review.approval_status
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/reviews/stats")
+async def get_review_stats(db: Session = Depends(get_db)):
+    """Get review approval statistics"""
+    try:
+        total = db.query(Review).count()
+        pending = db.query(Review).filter(Review.approval_status == "pending").count()
+        approved = db.query(Review).filter(Review.approval_status == "approved").count()
+        rejected = db.query(Review).filter(Review.approval_status == "rejected").count()
+        
+        return {
+            "success": True,
+            "stats": {
+                "total": total,
+                "pending": pending,
+                "approved": approved,
+                "rejected": rejected
+            }
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ==================== RESPONSE APPROVAL ENDPOINTS ====================
+
+class ResponseApproval(BaseModel):
+    approved: bool
+    final_response: Optional[str] = None
+    approved_by: str = "admin"
+
+@app.get("/api/responses/pending")
+async def get_pending_responses(db: Session = Depends(get_db)):
+    """Get all reviews with AI responses pending human approval"""
+    try:
+        reviews = db.query(Review).filter(
+            Review.ai_response.isnot(None),
+            Review.human_approved == False
+        ).order_by(Review.created_at.desc()).all()
+        
+        return {
+            "success": True,
+            "count": len(reviews),
+            "reviews": [
+                {
+                    "id": r.id,
+                    "business_id": r.business_id,
+                    "author": r.author_name,
+                    "rating": r.rating,
+                    "text": r.text,
+                    "review_date": r.review_date.isoformat() if r.review_date else None,
+                    "sentiment": r.sentiment,
+                    "ai_response": r.ai_response,
+                    "response_tone": r.response_tone,
+                    "human_approved": r.human_approved,
+                    "final_response": r.final_response,
+                    "response_posted": r.response_posted,
+                    "created_at": r.created_at.isoformat() if r.created_at else None
+                }
+                for r in reviews
+            ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/responses/{review_id}/approve")
+async def approve_response(
+    review_id: int,
+    approval: ResponseApproval,
+    db: Session = Depends(get_db)
+):
+    """Approve or reject an AI-generated response"""
+    try:
+        review = db.query(Review).filter(Review.id == review_id).first()
+        if not review:
+            raise HTTPException(status_code=404, detail="Review not found")
+        
+        if approval.approved:
+            # If human edited the response, use that, otherwise use AI response
+            review.final_response = approval.final_response if approval.final_response else review.ai_response
+            review.human_approved = True
+            message = "Response approved and ready to post"
+        else:
+            # Rejected - clear the response
+            review.final_response = None
+            review.human_approved = False
+            message = "Response rejected"
+        
+        review.updated_at = datetime.utcnow()
+        db.commit()
+        
+        return {
+            "success": True,
+            "message": message,
+            "review_id": review_id,
+            "approved": approval.approved
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        db.rollback()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/responses/stats")
+async def get_response_stats(db: Session = Depends(get_db)):
+    """Get response approval statistics"""
+    try:
+        total_with_ai = db.query(Review).filter(Review.ai_response.isnot(None)).count()
+        pending = db.query(Review).filter(
+            Review.ai_response.isnot(None),
+            Review.human_approved == False
+        ).count()
+        approved = db.query(Review).filter(Review.human_approved == True).count()
+        posted = db.query(Review).filter(Review.response_posted == True).count()
+        
+        return {
+            "success": True,
+            "stats": {
+                "total_with_ai_response": total_with_ai,
+                "pending_approval": pending,
+                "approved": approved,
+                "posted": posted
+            }
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
