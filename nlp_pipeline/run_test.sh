@@ -12,7 +12,7 @@ export TOKENIZERS_PARALLELISM=false
 export OMP_WAIT_POLICY=PASSIVE
 
 echo "🔧 Environment configured for macOS"
-echo "Running simple test..."
+echo "Running NLP pipeline example..."
 echo ""
 
-python simple_test.py
+python example.py
