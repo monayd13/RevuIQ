@@ -491,9 +491,11 @@ async def get_restaurant_analytics(
     try:
         since_date = datetime.utcnow() - timedelta(days=days)
         
+        # Only show approved reviews in analytics
         reviews = db.query(Review).filter(
             Review.business_id == restaurant_id,
-            Review.review_date >= since_date
+            Review.review_date >= since_date,
+            Review.approval_status == "approved"
         ).all()
         
         if not reviews:
@@ -588,7 +590,11 @@ async def get_sentiment_distribution(
     try:
         since_date = datetime.utcnow() - timedelta(days=days)
         
-        query = db.query(Review).filter(Review.review_date >= since_date)
+        # Only show approved reviews in analytics
+        query = db.query(Review).filter(
+            Review.review_date >= since_date,
+            Review.approval_status == "approved"
+        )
         if business_id:
             query = query.filter(Review.business_id == business_id)
         
@@ -618,7 +624,11 @@ async def get_emotion_distribution(
     try:
         since_date = datetime.utcnow() - timedelta(days=days)
         
-        query = db.query(Review).filter(Review.review_date >= since_date)
+        # Only show approved reviews in analytics
+        query = db.query(Review).filter(
+            Review.review_date >= since_date,
+            Review.approval_status == "approved"
+        )
         if business_id:
             query = query.filter(Review.business_id == business_id)
         
@@ -648,12 +658,14 @@ async def get_emotion_distribution(
 async def get_overall_stats(db: Session = Depends(get_db)):
     """Get overall stats"""
     try:
-        total_reviews = db.query(Review).count()
+        # Get all reviews (only approved for analytics)
+        total_reviews = db.query(Review).filter(Review.approval_status == "approved").count()
         total_businesses = db.query(Business).count()
         reviews_with_ai = db.query(Review).filter(Review.ai_response.isnot(None)).count()
-        
-        avg_rating_result = db.query(func.avg(Review.rating)).scalar()
-        avg_rating = float(avg_rating_result) if avg_rating_result else 0
+        # Calculate average rating (only approved reviews)
+        avg_rating = db.query(func.avg(Review.rating)).filter(
+            Review.approval_status == "approved"
+        ).scalar() or 0
         
         return {
             "success": True,
