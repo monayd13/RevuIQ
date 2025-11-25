@@ -661,7 +661,13 @@ async def get_overall_stats(db: Session = Depends(get_db)):
         # Get all reviews (only approved for analytics)
         total_reviews = db.query(Review).filter(Review.approval_status == "approved").count()
         total_businesses = db.query(Business).count()
-        reviews_with_ai = db.query(Review).filter(Review.ai_response.isnot(None)).count()
+        
+        # Only count approved reviews with AI responses
+        reviews_with_ai = db.query(Review).filter(
+            Review.ai_response.isnot(None),
+            Review.approval_status == "approved"
+        ).count()
+        
         # Calculate average rating (only approved reviews)
         avg_rating = db.query(func.avg(Review.rating)).filter(
             Review.approval_status == "approved"
