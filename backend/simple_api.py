@@ -662,6 +662,9 @@ async def get_overall_stats(db: Session = Depends(get_db)):
         total_reviews = db.query(Review).filter(Review.approval_status == "approved").count()
         total_businesses = db.query(Business).count()
         
+        # Count pending reviews (waiting for approval)
+        pending_reviews = db.query(Review).filter(Review.approval_status == "pending").count()
+        
         # Only count approved reviews with AI responses
         reviews_with_ai = db.query(Review).filter(
             Review.ai_response.isnot(None),
@@ -681,6 +684,7 @@ async def get_overall_stats(db: Session = Depends(get_db)):
                 "total_reviews": total_reviews,
                 "approved_responses": reviews_with_ai,
                 "posted_responses": 0,
+                "pending_reviews": pending_reviews,
                 "approval_rate": (reviews_with_ai / total_reviews * 100) if total_reviews > 0 else 0,
                 "post_rate": 0
             },

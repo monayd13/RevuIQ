@@ -18,6 +18,7 @@ interface Stats {
     total_reviews: number;
     approved_responses: number;
     posted_responses: number;
+    pending_reviews: number;
     approval_rate: number;
     post_rate: number;
   };
@@ -300,12 +301,11 @@ export default function AnalyticsPage() {
 
                   <div>
                     <p className="text-sm text-gray-600 mb-2">
-                      Pending Review
+                      Pending Approval
                     </p>
                     <div className="flex items-end space-x-2">
                       <p className="text-3xl font-bold text-orange-600">
-                        {(stats.response_stats?.total_reviews || 0) -
-                          (stats.response_stats?.approved_responses || 0)}
+                        {stats.response_stats?.pending_reviews || 0}
                       </p>
                       <p className="text-gray-600 mb-1">reviews</p>
                     </div>
@@ -314,7 +314,10 @@ export default function AnalyticsPage() {
                         className="bg-orange-500 h-2 rounded-full"
                         style={{
                           width: `${
-                            100 - (stats.response_stats?.approval_rate || 0)
+                            stats.response_stats?.pending_reviews 
+                              ? (stats.response_stats.pending_reviews / 
+                                 (stats.response_stats.total_reviews + stats.response_stats.pending_reviews) * 100)
+                              : 0
                           }%`,
                         }}
                       />
