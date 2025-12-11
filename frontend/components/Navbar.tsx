@@ -1,10 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { User, LogOut } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    // Check authentication status
+    const authStatus = localStorage.getItem('isAuthenticated');
+    const userData = localStorage.getItem('userData');
+    
+    if (authStatus === 'true') {
+      setIsAuthenticated(true);
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          setUserName(user.name || user.email || 'User');
+        } catch (e) {
+          setUserName('User');
+        }
+      }
+    }
+  }, [pathname]); // Re-check on route change
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userData');
+    setIsAuthenticated(false);
+    setUserName('');
+    router.push('/landing');
+  };
 
   const isActive = (path: string) => {
     return pathname === path
@@ -45,14 +76,6 @@ export default function Navbar() {
               🏪 Restaurants
             </Link>
             <Link
-              href="/reviews/approve"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
-                "/reviews/approve"
-              )}`}
-            >
-              ✅ Approve Reviews
-            </Link>
-            <Link
               href="/responses/approve"
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
                 "/responses/approve"
@@ -61,21 +84,39 @@ export default function Navbar() {
               💬 Approve Responses
             </Link>
             <Link
-              href="/analytics"
+              href="/live-monitor"
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
-                "/analytics"
+                "/live-monitor"
               )}`}
             >
-              📊 Analytics
+              📡 Live Monitor
             </Link>
           </div>
 
-          {/* Status Indicator */}
-          <div className="flex items-center space-x-2">
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-xs text-gray-300">Live</span>
-            </div>
+          {/* User Section */}
+          <div className="flex items-center space-x-3">
+            {isAuthenticated ? (
+              <>
+                <div className="flex items-center space-x-2 px-3 py-2 bg-blue-700 rounded-md">
+                  <User className="w-4 h-4 text-white" />
+                  <span className="text-sm font-medium text-white">{userName}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center space-x-2 px-4 py-2 bg-red-500 text-white rounded-md text-sm font-bold hover:bg-red-600 transition-colors shadow-md"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
+                </button>
+              </>
+            ) : (
+              <Link
+                href="/signup"
+                className="px-6 py-2 bg-white text-blue-600 rounded-md text-sm font-bold hover:bg-gray-100 transition-colors shadow-md"
+              >
+                Sign Up
+              </Link>
+            )}
           </div>
         </div>
       </div>

@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 interface SentimentData {
-  POSITIVE?: number;
-  NEGATIVE?: number;
-  NEUTRAL?: number;
+  positive?: number;
+  negative?: number;
+  neutral?: number;
 }
 
 interface EmotionData {
@@ -14,15 +14,12 @@ interface EmotionData {
 }
 
 interface Stats {
-  response_stats: {
-    total_reviews: number;
-    approved_responses: number;
-    posted_responses: number;
-    pending_reviews: number;
-    approval_rate: number;
-    post_rate: number;
-  };
-  average_rating: number;
+  total_reviews: number;
+  total_businesses: number;
+  avg_rating: number;
+  positive_reviews: number;
+  negative_reviews: number;
+  response_rate: number;
 }
 
 export default function AnalyticsPage() {
@@ -42,7 +39,7 @@ export default function AnalyticsPage() {
     try {
       // Fetch sentiment distribution
       const sentimentRes = await fetch(
-        `http://localhost:8000/api/analytics/sentiment-distribution?days=${days}`
+        `/api/analytics/sentiment-distribution?days=${days}`
       );
       if (sentimentRes.ok) {
         const sentimentJson = await sentimentRes.json();
@@ -51,7 +48,7 @@ export default function AnalyticsPage() {
 
       // Fetch emotion distribution
       const emotionRes = await fetch(
-        `http://localhost:8000/api/analytics/emotion-distribution?days=${days}`
+        `/api/analytics/emotion-distribution?days=${days}`
       );
       if (emotionRes.ok) {
         const emotionJson = await emotionRes.json();
@@ -60,7 +57,7 @@ export default function AnalyticsPage() {
 
       // Fetch stats
       const statsRes = await fetch(
-        "http://localhost:8000/api/analytics/stats"
+        "/api/analytics/stats"
       );
       if (statsRes.ok) {
         const statsJson = await statsRes.json();
@@ -74,10 +71,10 @@ export default function AnalyticsPage() {
   };
 
   const getSentimentColor = (sentiment: string) => {
-    switch (sentiment) {
-      case "POSITIVE":
+    switch (sentiment.toLowerCase()) {
+      case "positive":
         return "bg-green-500";
-      case "NEGATIVE":
+      case "negative":
         return "bg-red-500";
       default:
         return "bg-gray-500";
@@ -96,9 +93,9 @@ export default function AnalyticsPage() {
   };
 
   const totalSentiment =
-    (sentimentData.POSITIVE || 0) +
-    (sentimentData.NEGATIVE || 0) +
-    (sentimentData.NEUTRAL || 0);
+    (sentimentData.positive || 0) +
+    (sentimentData.negative || 0) +
+    (sentimentData.neutral || 0);
 
   const totalEmotions = Object.values(emotionData).reduce(
     (sum, count) => sum + count,
@@ -148,30 +145,30 @@ export default function AnalyticsPage() {
         ) : (
           <div className="space-y-6">
             {/* Stats Overview */}
-            {stats && stats.response_stats && (
+            {stats && (
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="bg-white rounded-lg shadow-lg p-6">
                   <p className="text-sm text-gray-600 mb-1">Total Reviews</p>
                   <p className="text-3xl font-bold text-gray-900">
-                    {stats.response_stats?.total_reviews || 0}
+                    {stats.total_reviews || 0}
                   </p>
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-6">
                   <p className="text-sm text-gray-600 mb-1">Avg Rating</p>
                   <p className="text-3xl font-bold text-yellow-600">
-                    {(stats.average_rating || 0).toFixed(1)} ⭐
+                    {(stats.avg_rating || 0).toFixed(1)} ⭐
                   </p>
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-6">
-                  <p className="text-sm text-gray-600 mb-1">Approval Rate</p>
+                  <p className="text-sm text-gray-600 mb-1">Response Rate</p>
                   <p className="text-3xl font-bold text-green-600">
-                    {(stats.response_stats?.approval_rate || 0).toFixed(0)}%
+                    {(stats.response_rate || 0).toFixed(0)}%
                   </p>
                 </div>
                 <div className="bg-white rounded-lg shadow-lg p-6">
-                  <p className="text-sm text-gray-600 mb-1">Posted</p>
+                  <p className="text-sm text-gray-600 mb-1">Restaurants</p>
                   <p className="text-3xl font-bold text-blue-600">
-                    {stats.response_stats?.posted_responses || 0}
+                    {stats.total_businesses || 0}
                   </p>
                 </div>
               </div>
@@ -179,7 +176,7 @@ export default function AnalyticsPage() {
 
             {/* Sentiment Distribution */}
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-semibold mb-4">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">
                 Sentiment Distribution
               </h2>
               {totalSentiment > 0 ? (
@@ -189,8 +186,8 @@ export default function AnalyticsPage() {
                     return (
                       <div key={sentiment}>
                         <div className="flex justify-between mb-1">
-                          <span className="font-semibold">{sentiment}</span>
-                          <span className="text-gray-600">
+                          <span className="font-semibold text-gray-900 capitalize">{sentiment}</span>
+                          <span className="text-gray-700 font-medium">
                             {count} ({percentage.toFixed(1)}%)
                           </span>
                         </div>
@@ -215,7 +212,7 @@ export default function AnalyticsPage() {
 
             {/* Emotion Distribution */}
             <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-2xl font-semibold mb-4">
+              <h2 className="text-2xl font-semibold mb-4 text-gray-900">
                 Emotion Distribution
               </h2>
               {totalEmotions > 0 ? (
@@ -248,30 +245,30 @@ export default function AnalyticsPage() {
               )}
             </div>
 
-            {/* Response Performance */}
-            {stats && stats.response_stats && (
+            {/* Review Breakdown */}
+            {stats && (
               <div className="bg-white rounded-lg shadow-lg p-6">
-                <h2 className="text-2xl font-semibold mb-4">
-                  Response Performance
+                <h2 className="text-2xl font-semibold mb-4 text-gray-900">
+                  Review Breakdown
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <p className="text-sm text-gray-600 mb-2">
-                      Approved Responses
+                      Positive Reviews
                     </p>
                     <div className="flex items-end space-x-2">
                       <p className="text-3xl font-bold text-green-600">
-                        {stats.response_stats?.approved_responses || 0}
+                        {stats.positive_reviews || 0}
                       </p>
                       <p className="text-gray-600 mb-1">
-                        / {stats.response_stats?.total_reviews || 0}
+                        / {stats.total_reviews || 0}
                       </p>
                     </div>
                     <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-green-500 h-2 rounded-full"
                         style={{
-                          width: `${stats.response_stats?.approval_rate || 0}%`,
+                          width: `${stats.total_reviews ? (stats.positive_reviews / stats.total_reviews * 100) : 0}%`,
                         }}
                       />
                     </div>
@@ -279,46 +276,40 @@ export default function AnalyticsPage() {
 
                   <div>
                     <p className="text-sm text-gray-600 mb-2">
-                      Posted Responses
+                      Negative Reviews
+                    </p>
+                    <div className="flex items-end space-x-2">
+                      <p className="text-3xl font-bold text-red-600">
+                        {stats.negative_reviews || 0}
+                      </p>
+                      <p className="text-gray-600 mb-1">
+                        / {stats.total_reviews || 0}
+                      </p>
+                    </div>
+                    <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
+                      <div
+                        className="bg-red-500 h-2 rounded-full"
+                        style={{
+                          width: `${stats.total_reviews ? (stats.negative_reviews / stats.total_reviews * 100) : 0}%`,
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-600 mb-2">
+                      Response Rate
                     </p>
                     <div className="flex items-end space-x-2">
                       <p className="text-3xl font-bold text-blue-600">
-                        {stats.response_stats?.posted_responses || 0}
-                      </p>
-                      <p className="text-gray-600 mb-1">
-                        / {stats.response_stats?.total_reviews || 0}
+                        {stats.response_rate || 0}%
                       </p>
                     </div>
                     <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
                       <div
                         className="bg-blue-500 h-2 rounded-full"
                         style={{
-                          width: `${stats.response_stats?.post_rate || 0}%`,
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-sm text-gray-600 mb-2">
-                      Pending Approval
-                    </p>
-                    <div className="flex items-end space-x-2">
-                      <p className="text-3xl font-bold text-orange-600">
-                        {stats.response_stats?.pending_reviews || 0}
-                      </p>
-                      <p className="text-gray-600 mb-1">reviews</p>
-                    </div>
-                    <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-                      <div
-                        className="bg-orange-500 h-2 rounded-full"
-                        style={{
-                          width: `${
-                            stats.response_stats?.pending_reviews 
-                              ? (stats.response_stats.pending_reviews / 
-                                 (stats.response_stats.total_reviews + stats.response_stats.pending_reviews) * 100)
-                              : 0
-                          }%`,
+                          width: `${stats.response_rate || 0}%`,
                         }}
                       />
                     </div>
@@ -326,31 +317,6 @@ export default function AnalyticsPage() {
                 </div>
               </div>
             )}
-
-            {/* Quick Actions */}
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-lg p-6 text-white">
-              <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button 
-                  onClick={() => router.push('/restaurants')}
-                  className="bg-white text-blue-600 py-3 px-6 rounded-lg font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center gap-2"
-                >
-                  📥 Manage Restaurants
-                </button>
-                <button 
-                  onClick={() => router.push('/reviews/approve')}
-                  className="bg-white text-purple-600 py-3 px-6 rounded-lg font-semibold hover:bg-purple-50 transition-colors flex items-center justify-center gap-2"
-                >
-                  ✅ Approve Reviews
-                </button>
-                <button 
-                  onClick={() => router.push('/responses/approve')}
-                  className="bg-white text-green-600 py-3 px-6 rounded-lg font-semibold hover:bg-green-50 transition-colors flex items-center justify-center gap-2"
-                >
-                  💬 Approve Responses
-                </button>
-              </div>
-            </div>
           </div>
         )}
       </div>

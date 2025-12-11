@@ -51,14 +51,14 @@ export default function LiveMonitorPage() {
     setIsLoadingReal(true);
     try {
       // Fetch from all restaurants
-      const restaurantsRes = await fetch('http://localhost:8000/api/restaurants');
+      const restaurantsRes = await fetch('/api/restaurants');
       if (restaurantsRes.ok) {
         const restaurantsData = await restaurantsRes.json();
         const allReviews: any[] = [];
         
         // Fetch reviews for each restaurant
         for (const restaurant of restaurantsData.restaurants) {
-          const reviewsRes = await fetch(`http://localhost:8000/api/reviews/restaurant/${restaurant.id}`);
+          const reviewsRes = await fetch(`/api/reviews/restaurant/${restaurant.id}`);
           if (reviewsRes.ok) {
             const reviewsData = await reviewsRes.json();
             // Add restaurant name to each review
@@ -91,8 +91,11 @@ export default function LiveMonitorPage() {
     if (realReviews.length === 0) return;
 
     const sentimentMap: { [key: string]: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE' } = {
+      'positive': 'POSITIVE',
       'POSITIVE': 'POSITIVE',
-      'NEUTRAL': 'NEUTRAL', 
+      'neutral': 'NEUTRAL',
+      'NEUTRAL': 'NEUTRAL',
+      'negative': 'NEGATIVE',
       'NEGATIVE': 'NEGATIVE'
     };
 
@@ -102,7 +105,8 @@ export default function LiveMonitorPage() {
     let totalRating = 0;
 
     realReviews.forEach(review => {
-      const sentiment = sentimentMap[review.sentiment] || 'NEUTRAL';
+      const sentiment = sentimentMap[review.sentiment?.toLowerCase()] || 
+                       sentimentMap[review.sentiment] || 'NEUTRAL';
       if (sentiment === 'POSITIVE') positive++;
       else if (sentiment === 'NEUTRAL') neutral++;
       else if (sentiment === 'NEGATIVE') negative++;
@@ -125,21 +129,46 @@ export default function LiveMonitorPage() {
     const processReviewWithAI = async (review: any) => {
       try {
         // Reviews already have AI analysis from backend
+        // Handle both uppercase and lowercase sentiment values
         const sentimentMap: { [key: string]: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE' } = {
+          'positive': 'POSITIVE',
           'POSITIVE': 'POSITIVE',
-          'NEUTRAL': 'NEUTRAL', 
+          'neutral': 'NEUTRAL',
+          'NEUTRAL': 'NEUTRAL',
+          'negative': 'NEGATIVE',
           'NEGATIVE': 'NEGATIVE'
         };
 
-        // Extract emotions from the emotions object
-        const emotionsList = review.emotions ? 
-          Object.keys(review.emotions).map(key => key.charAt(0).toUpperCase() + key.slice(1)) :
-          [];
+        // Parse emotions from JSON string
+        let emotionsList: string[] = [];
+        try {
+          const emotionsData = typeof review.emotions === 'string' 
+            ? JSON.parse(review.emotions) 
+            : review.emotions;
+          if (emotionsData && typeof emotionsData === 'object') {
+            emotionsList = Object.keys(emotionsData).map(key => 
+              key.charAt(0).toUpperCase() + key.slice(1)
+            );
+          }
+        } catch (e) {
+          console.error('Error parsing emotions:', e);
+        }
 
-        // Extract aspects
-        const aspectsList = review.aspects ? 
-          review.aspects.map((a: any) => a.aspect.charAt(0).toUpperCase() + a.aspect.slice(1)) :
-          [];
+        // Parse aspects from JSON string
+        let aspectsList: string[] = [];
+        try {
+          const aspectsData = typeof review.aspects === 'string' 
+            ? JSON.parse(review.aspects) 
+            : review.aspects;
+          if (Array.isArray(aspectsData)) {
+            aspectsList = aspectsData.map((a: any) => {
+              const aspect = typeof a === 'string' ? a : a.aspect;
+              return aspect.charAt(0).toUpperCase() + aspect.slice(1);
+            });
+          }
+        } catch (e) {
+          console.error('Error parsing aspects:', e);
+        }
 
         const newReview: LiveReview = {
           id: review.id?.toString() || Math.random().toString(36).substr(2, 9),
