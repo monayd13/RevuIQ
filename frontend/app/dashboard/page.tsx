@@ -22,15 +22,11 @@ import { useRouter } from 'next/navigation';
 
 interface Stats {
   total_reviews: number;
-  total_restaurants: number;
-  response_stats: {
-    total_reviews: number;
-    approved_responses: number;
-    posted_responses: number;
-    approval_rate: number;
-    post_rate: number;
-  };
-  average_rating: number;
+  total_businesses: number;
+  avg_rating: number;
+  positive_reviews: number;
+  negative_reviews: number;
+  response_rate: number;
 }
 
 interface SentimentDistribution {
@@ -68,14 +64,14 @@ export default function DashboardPage() {
     setLoading(true);
     try {
       // Fetch overall stats
-      const statsRes = await fetch('http://localhost:8000/api/analytics/stats');
+      const statsRes = await fetch('/api/analytics/stats');
       if (statsRes.ok) {
         const data = await statsRes.json();
         setStats(data);
       }
 
       // Fetch sentiment distribution
-      const sentimentRes = await fetch('http://localhost:8000/api/analytics/sentiment-distribution?days=30');
+      const sentimentRes = await fetch('/api/analytics/sentiment-distribution?days=30');
       if (sentimentRes.ok) {
         const data = await sentimentRes.json();
         setSentiment(data.distribution);
@@ -297,7 +293,7 @@ export default function DashboardPage() {
             </div>
             <div className="flex items-baseline space-x-2 mb-2">
               <p className="text-4xl font-bold text-gray-900">
-                {stats?.average_rating.toFixed(1) || '0.0'}
+                {stats?.avg_rating?.toFixed(1) || '0.0'}
               </p>
               <span className="text-gray-400">/5</span>
             </div>
@@ -306,7 +302,7 @@ export default function DashboardPage() {
                 <Star
                   key={star}
                   className={`w-4 h-4 ${
-                    star <= Math.round(stats?.average_rating || 0)
+                    star <= Math.round(stats?.avg_rating || 0)
                       ? 'text-yellow-400 fill-yellow-400'
                       : 'text-gray-300'
                   }`}
@@ -328,10 +324,10 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className="text-4xl font-bold text-gray-900 mb-2">
-              {Math.round(stats?.response_stats.approval_rate || 0)}%
+              {Math.round(stats?.response_rate || 0)}%
             </p>
             <p className="text-sm text-gray-500">
-              {stats?.response_stats.approved_responses || 0} AI responses generated
+              {stats?.total_reviews || 0} AI responses generated
             </p>
           </motion.div>
 
@@ -348,7 +344,7 @@ export default function DashboardPage() {
               </div>
             </div>
             <p className="text-4xl font-bold text-gray-900 mb-2">
-              {stats?.total_restaurants || 0}
+              {stats?.total_businesses || 0}
             </p>
             <p className="text-sm text-gray-500">Active locations</p>
           </motion.div>

@@ -27,7 +27,7 @@ export default function RestaurantsPage() {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/restaurants");
+      const response = await fetch("/api/restaurants");
       if (response.ok) {
         const data = await response.json();
         setRestaurants(
@@ -47,7 +47,7 @@ export default function RestaurantsPage() {
   const addRestaurant = async () => {
     if (newRestaurant.name.trim()) {
       try {
-        const response = await fetch("http://localhost:8000/api/restaurants", {
+        const response = await fetch("/api/restaurants", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -75,7 +75,7 @@ export default function RestaurantsPage() {
   const deleteRestaurant = async (id: string) => {
     if (confirm("Are you sure you want to delete this restaurant? This will also delete all its reviews.")) {
       try {
-        const response = await fetch(`http://localhost:8000/api/restaurants/${id}`, {
+        const response = await fetch(`/api/restaurants/${id}`, {
           method: "DELETE",
         });
 
@@ -99,45 +99,46 @@ export default function RestaurantsPage() {
     try {
       const reviewTemplates = [
         { rating: 5, texts: [
-          "Amazing food and excellent service! The pasta was absolutely delicious and the staff was very friendly. Will definitely come back!",
-          "Outstanding experience! Every dish was perfectly prepared and the ambiance was wonderful. Highly recommend!",
-          "Best restaurant in town! The chef really knows what they're doing. Five stars all the way!",
-          "Incredible meal from start to finish. The attention to detail was impressive. Can't wait to return!",
-          "Absolutely loved everything about this place! Great food, great service, great atmosphere!"
+          "Came here for my anniversary and it exceeded all expectations! The ribeye steak was cooked to perfection - medium rare just like I asked. Our server Maria was attentive without being intrusive. The chocolate lava cake for dessert was divine. Already planning our next visit!",
+          "This place is a hidden gem! I ordered the seafood linguine and it tasted like I was dining in Italy. Fresh ingredients, generous portions, and the chef even came out to ask how everything was. The wine selection is impressive too. Highly recommend the Chianti!",
+          "Best brunch spot in the city! Their avocado toast with poached eggs is Instagram-worthy AND delicious. The cold brew coffee is smooth and not bitter at all. Atmosphere is cozy with great music. Waited 20 minutes but it was totally worth it. Will be back every weekend!",
+          "My family and I celebrated my daughter's graduation here. The private dining room was perfect, and they even decorated it with balloons! Every single dish from the tasting menu was exceptional. The manager personally thanked us for coming. This is what hospitality looks like!",
+          "I'm usually picky about sushi but this place changed my mind! The salmon nigiri melts in your mouth and the dragon roll is a work of art. Chef Ken explained each piece to us. Prices are reasonable for the quality. Bringing all my friends here!"
         ]},
         { rating: 4, texts: [
-          "Great atmosphere and good food. The only downside was the wait time, but overall a pleasant experience.",
-          "Really enjoyed our meal here. Food was tasty and service was good. Would come back again.",
-          "Solid restaurant with good portions. A few minor issues but nothing major. Worth visiting.",
-          "Nice place with friendly staff. Food was good though not exceptional. Overall satisfied.",
-          "Good experience overall. The menu has nice variety and everything we tried was well-prepared."
+          "Really solid experience overall. The burger was juicy and cooked well, fries were crispy. Only complaint is it took 15 minutes longer than expected during lunch rush. Staff apologized and gave us free dessert though, which was nice. Would definitely return!",
+          "Great neighborhood spot! Love their outdoor patio seating. The margherita pizza had a perfect crispy crust. Service was friendly but a bit slow when we needed refills. Still, the food quality makes up for it. Good value for money.",
+          "Took my vegetarian friend here and she loved the options! I had the grilled chicken which was tender and well-seasoned. The only reason I'm not giving 5 stars is the noise level - it's pretty loud inside. But the food is consistently good!",
+          "Nice ambiance with dim lighting and soft jazz music. The filet mignon was excellent, though the sides were just okay. Our waiter gave great wine recommendations. A bit pricey but you're paying for the experience. Perfect for date night!",
+          "Impressed with their gluten-free menu! As someone with celiac disease, I appreciate restaurants that take allergies seriously. The GF pasta tasted just like regular pasta. Portions could be slightly bigger but overall very satisfied. Will recommend to my support group!"
         ]},
         { rating: 3, texts: [
-          "Average experience. Nothing special but nothing terrible either. Food was okay.",
-          "It was fine. Not bad but not great. Probably won't rush back but wouldn't avoid it either.",
-          "Decent food but overpriced for what you get. Service was acceptable.",
-          "Middle of the road restaurant. Some dishes were good, others were mediocre.",
-          "Okay place. Met expectations but didn't exceed them. Fair pricing."
+          "It's okay for a quick bite. The sandwich was decent but nothing memorable. Service was fast which is good for lunch breaks. Prices are fair. Not bad, not amazing - just average. There are better options nearby but this works in a pinch.",
+          "Mixed feelings about this place. The appetizers were great - loved the calamari! But my main course (chicken parmesan) was lukewarm and the cheese wasn't fully melted. Dessert saved the meal. Might give them another chance on a different day.",
+          "Atmosphere is nice but the food didn't wow me. Had the salmon which was a bit dry. My partner's pasta was better. Service was professional but not particularly warm. For the price point, I expected more. It's not terrible, just underwhelming.",
+          "Came here based on a friend's recommendation but I don't see the hype. Food was edible but lacked seasoning. Had to ask for salt and pepper. The portions are generous though. Maybe I ordered the wrong thing? Might try their specials next time.",
+          "Decent spot for casual dining. The menu has variety which is nice. My salad was fresh but the dressing was bland. Coffee was weak. It's convenient for the area but I probably won't go out of my way to come back. Three stars seems fair."
         ]},
         { rating: 2, texts: [
-          "Disappointed with the service. Food was cold and took forever to arrive. Not worth the price.",
-          "Not impressed. The food lacked flavor and the portions were small. Expected better.",
-          "Below average experience. Long wait times and the food wasn't fresh. Disappointing.",
-          "Had high hopes but was let down. Service was slow and food quality was poor.",
-          "Wouldn't recommend. Several issues with our order and staff seemed disorganized."
+          "Pretty disappointed. Waited 45 minutes for our food only to get cold fries and a burger that was overcooked. Asked them to remake it but the replacement wasn't much better. Server seemed overwhelmed. The place was understaffed. Not sure I'll give them another shot.",
+          "The photos online look nothing like what we got. My 'gourmet' pizza looked sad and tasted worse. Crust was soggy in the middle. My wife's salad had wilted lettuce. We complained and they took 10% off the bill but that doesn't fix the quality issue. Very let down.",
+          "Hygiene concerns here. Saw a server touch food with bare hands. Tables weren't properly cleaned - ours was sticky. The bathroom was out of soap. Food was mediocre at best. For $60 for two people, this is unacceptable. Health department should check this place.",
+          "Ordered delivery and it arrived an hour late and cold. The container was leaking sauce everywhere. Called to complain and they were dismissive. The food itself was bland and portions were smaller than expected. Save your money and order from somewhere else.",
+          "Service was incredibly slow and inattentive. Had to flag down our server multiple times for water refills. Food was underseasoned and presentation was sloppy. For these prices, I expect way better. The manager didn't even acknowledge our complaints. Won't be returning."
         ]},
         { rating: 1, texts: [
-          "Terrible experience. Food was inedible and service was rude. Never coming back!",
-          "Worst restaurant I've been to. Everything was wrong from start to finish. Avoid!",
-          "Absolutely awful. Dirty tables, cold food, and terrible service. Health hazard!",
-          "Complete disaster. Got food poisoning and the manager was unhelpful. Stay away!",
-          "Zero stars if I could. Horrible food, horrible service, horrible everything!"
+          "Absolutely the worst dining experience I've had in years. Found a HAIR in my pasta halfway through eating. When I showed the server, they just shrugged and offered to remake it. No apology, no discount. I lost my appetite completely. This is disgusting and unacceptable!",
+          "AVOID AT ALL COSTS! Got severe food poisoning after eating here. Spent the entire next day sick. The chicken tasted off but I thought I was being paranoid. Called to report it and they denied any responsibility. I'm contacting the health department. This place is dangerous!",
+          "Rude, unprofessional staff and terrible food. Our server rolled her eyes when we asked questions about the menu. The steak was so tough I couldn't cut it. Manager refused to comp anything and argued with us. Walked out and paid for drinks only. Never again!",
+          "This place should be shut down. Dirty kitchen visible from dining area, flies buzzing around, and the smell was off-putting. We left before ordering. How is this place still operating? Seriously concerning. I'm reporting this to the authorities. Do NOT eat here!",
+          "Worst $100 I've ever spent. Everything was wrong - wrong orders, wrong temperatures, wrong attitude from staff. The 'fresh' fish smelled fishy (not in a good way). Overpriced garbage. The chef should be embarrassed. Save yourself the money and disappointment. ZERO STARS if I could!"
         ]}
       ];
 
-      const names = ["John Doe", "Jane Smith", "Mike Johnson", "Sarah Williams", "David Brown", 
-                     "Emily Davis", "Chris Wilson", "Amanda Taylor", "Robert Martinez", "Lisa Anderson",
-                     "James Thomas", "Maria Garcia", "Michael Lee", "Jennifer White", "Daniel Harris"];
+      const names = ["Alex Chen", "Priya Patel", "Marcus Johnson", "Sofia Rodriguez", "Jamal Williams", 
+                     "Emma Thompson", "Kai Nakamura", "Olivia Martinez", "Liam O'Brien", "Zara Ahmed",
+                     "Diego Santos", "Aisha Khan", "Noah Kim", "Isabella Rossi", "Ethan Taylor",
+                     "Maya Singh", "Lucas Brown", "Chloe Nguyen", "Ryan Murphy", "Amara Okafor"];
 
       const sampleReviews = [];
       const timestamp = Date.now();
@@ -159,7 +160,7 @@ export default function RestaurantsPage() {
         });
       }
 
-      const response = await fetch("http://localhost:8000/api/reviews/bulk", {
+      const response = await fetch("/api/reviews/bulk", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -188,7 +189,7 @@ export default function RestaurantsPage() {
   const fetchGoogleReviews = async (restaurant: Restaurant) => {
     setFetchingId(restaurant.id);
     try {
-      const response = await fetch("http://localhost:8000/api/google/fetch-reviews", {
+      const response = await fetch("/api/google/fetch-reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -242,7 +243,7 @@ export default function RestaurantsPage() {
   const fetchReviews = async (restaurant: Restaurant) => {
     setFetchingId(restaurant.id);
     try {
-      const response = await fetch("http://localhost:8000/api/fetch-reviews", {
+      const response = await fetch("/api/fetch-reviews", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

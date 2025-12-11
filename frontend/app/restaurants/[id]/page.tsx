@@ -79,7 +79,7 @@ export default function RestaurantDetailPage() {
     try {
       // Fetch restaurant details
       const restaurantRes = await fetch(
-        `http://localhost:8000/api/restaurants/${restaurantId}`
+        `/api/restaurants/${restaurantId}`
       );
       if (restaurantRes.ok) {
         const data = await restaurantRes.json();
@@ -88,7 +88,7 @@ export default function RestaurantDetailPage() {
 
       // Fetch reviews
       const reviewsRes = await fetch(
-        `http://localhost:8000/api/reviews/restaurant/${restaurantId}`
+        `/api/reviews/restaurant/${restaurantId}`
       );
       if (reviewsRes.ok) {
         const data = await reviewsRes.json();
@@ -97,7 +97,7 @@ export default function RestaurantDetailPage() {
 
       // Fetch analytics
       const analyticsRes = await fetch(
-        `http://localhost:8000/api/analytics/restaurant/${restaurantId}?days=${days}`
+        `/api/analytics/restaurant/${restaurantId}?days=${days}`
       );
       if (analyticsRes.ok) {
         const data = await analyticsRes.json();
@@ -111,7 +111,7 @@ export default function RestaurantDetailPage() {
   };
 
   const getSentimentColor = (sentiment: string) => {
-    switch (sentiment) {
+    switch (sentiment?.toUpperCase()) {
       case "POSITIVE":
         return "text-green-600 bg-green-50";
       case "NEGATIVE":
@@ -122,7 +122,7 @@ export default function RestaurantDetailPage() {
   };
 
   const getSentimentBadge = (sentiment: string) => {
-    switch (sentiment) {
+    switch (sentiment?.toUpperCase()) {
       case "POSITIVE":
         return "😊 Positive";
       case "NEGATIVE":
