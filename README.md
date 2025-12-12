@@ -160,5 +160,5 @@ MIT License - Educational Project
 ## Notes
 
 - Google Places API only returns 5 reviews per restaurant
-- Reviews are analyzed using mock NLP (simplified version)
+- Reviews are analyzed using NLP
 - Database is SQLite stored in `backend/revuiq.db`
