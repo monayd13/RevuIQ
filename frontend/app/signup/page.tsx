@@ -66,7 +66,7 @@ export default function SignupPage() {
         email: newUser.email,
         company: newUser.company
       }));
-      
+      document.cookie = 'isAuthenticated=true; path=/; max-age=86400; SameSite=Lax';
       router.push('/dashboard');
     }
   };

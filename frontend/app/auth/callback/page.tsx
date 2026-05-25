@@ -83,6 +83,8 @@ function AuthCallbackInner() {
           company: existingUser.company || '',
           provider: 'google'
         }));
+        // Set cookie so middleware can detect auth state
+        document.cookie = 'isAuthenticated=true; path=/; max-age=86400; SameSite=Lax';
 
         setStatus('success');
         setMessage(`Welcome ${existingUser.name}! Redirecting...`);

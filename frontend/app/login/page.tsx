@@ -53,6 +53,8 @@ export default function LoginPage() {
       email: user.email,
       company: user.company || ''
     }));
+    // Set cookie so middleware can detect auth state
+    document.cookie = 'isAuthenticated=true; path=/; max-age=86400; SameSite=Lax';
     router.push('/dashboard');
   };
 
