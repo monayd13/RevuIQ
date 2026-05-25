@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 
-export default function AuthCallbackPage() {
+function AuthCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [status, setStatus] = useState<'loading' | 'success' | 'error' | 'name_input'>('loading');
@@ -200,5 +200,17 @@ export default function AuthCallbackPage() {
         )}
       </motion.div>
     </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="w-16 h-16 text-blue-500 animate-spin" />
+      </div>
+    }>
+      <AuthCallbackInner />
+    </Suspense>
   );
 }
