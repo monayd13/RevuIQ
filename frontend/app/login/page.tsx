@@ -46,6 +46,8 @@ export default function LoginPage() {
   const handleGoogleLogin = () => {
     const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '276713330167-0gvst3ijhaero31e8s83umjvupbd953i.apps.googleusercontent.com';
     const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || `${window.location.origin}/auth/callback`;
+    // Debug: log exact redirect URI being sent
+    console.log('Google OAuth redirect_uri:', redirectUri);
     const scope = 'email profile';
 
     if (!clientId) {
