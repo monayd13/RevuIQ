@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -27,6 +27,7 @@ import { useToast } from '@/components/ui/use-toast';
 
 const evaluationSchema = z.object({
   peerId: z.string().min(1, 'Please select a peer'),
+  peerName: z.string().min(1, 'Please select a peer'),
   rating: z.number().min(1).max(5),
   feedback: z.string().min(10, 'Feedback must be at least 10 characters'),
   strengths: z.string().min(1, 'Please mention at least one strength'),
@@ -41,19 +42,27 @@ interface EvaluationFormProps {
 
 export default function EvaluationForm({ onSubmit }: EvaluationFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [peers, setPeers] = useState<Array<{ id: string; name: string; email: string }>>([]);
   const { toast } = useToast();
-  
-  // Mock data - in a real app, this would come from your API
-  const peers = [
-    { id: '1', name: 'Alex Johnson' },
-    { id: '2', name: 'Jamie Smith' },
-    { id: '3', name: 'Taylor Wilson' },
-  ];
+
+  useEffect(() => {
+    const users = JSON.parse(localStorage.getItem('revuiq_users') || '[]');
+    const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
+    const availablePeers = users
+      .filter((user: { email?: string }) => user.email && user.email !== currentUser.email)
+      .map((user: { id?: string; name?: string; email: string }) => ({
+        id: user.id || user.email,
+        name: user.name || user.email,
+        email: user.email,
+      }));
+    setPeers(availablePeers);
+  }, []);
 
   const form = useForm<EvaluationFormValues>({
     resolver: zodResolver(evaluationSchema),
     defaultValues: {
       peerId: '',
+      peerName: '',
       rating: 3,
       feedback: '',
       strengths: '',
@@ -64,21 +73,13 @@ export default function EvaluationForm({ onSubmit }: EvaluationFormProps) {
   const handleSubmit = async (data: EvaluationFormValues) => {
     try {
       setIsSubmitting(true);
-      
-      // In a real app, you would call your API here
-      const response = await fetch('/api/peer-evaluation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit evaluation');
-      }
+      const result = {
+        ...data,
+        id: Date.now().toString(),
+        createdAt: new Date().toISOString(),
+      };
 
-      const result = await response.json();
       onSubmit(result);
       
       toast({
@@ -108,18 +109,31 @@ export default function EvaluationForm({ onSubmit }: EvaluationFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Select Peer to Evaluate</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <Select
+                onValueChange={(value) => {
+                  const peer = peers.find((item) => item.id === value);
+                  field.onChange(value);
+                  form.setValue('peerName', peer?.name || '');
+                }}
+                defaultValue={field.value}
+              >
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Select a peer" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {peers.map((peer) => (
-                    <SelectItem key={peer.id} value={peer.id}>
-                      {peer.name}
+                  {peers.length > 0 ? (
+                    peers.map((peer) => (
+                      <SelectItem key={peer.id} value={peer.id}>
+                        {peer.name} ({peer.email})
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="no-peers" disabled>
+                      No other signed-up users available
                     </SelectItem>
-                  ))}
+                  )}
                 </SelectContent>
               </Select>
               <FormMessage />

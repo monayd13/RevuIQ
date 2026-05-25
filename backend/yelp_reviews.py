@@ -32,8 +32,7 @@ class YelpReviewsFetcher:
             business_id if found, None otherwise
         """
         if not self.api_key:
-            print("⚠️  No Yelp API key found. Using demo mode.")
-            return None
+            raise ValueError("YELP_API_KEY is required to fetch Yelp reviews.")
         
         try:
             url = f"{self.base_url}/businesses/search"
@@ -76,7 +75,7 @@ class YelpReviewsFetcher:
             List of review dictionaries
         """
         if not self.api_key:
-            return self._get_demo_reviews()
+            raise ValueError("YELP_API_KEY is required to fetch Yelp reviews.")
         
         try:
             url = f"{self.base_url}/businesses/{business_id}/reviews"
@@ -103,11 +102,11 @@ class YelpReviewsFetcher:
                 return formatted_reviews
             else:
                 print(f"❌ Failed to get reviews: {response.status_code}")
-                return self._get_demo_reviews()
+                raise RuntimeError(f"Yelp API failed with status {response.status_code}")
                 
         except Exception as e:
             print(f"❌ Error fetching reviews: {e}")
-            return self._get_demo_reviews()
+            raise
     
     def fetch_business_reviews(self, business_name: str, location: str = "") -> List[Dict]:
         """
@@ -126,8 +125,7 @@ class YelpReviewsFetcher:
         business_id = self.search_business(business_name, location)
         
         if not business_id:
-            print("⚠️  Using demo reviews instead")
-            return self._get_demo_reviews()
+            raise LookupError(f"Business not found on Yelp: {business_name}")
         
         # Get reviews
         return self.get_reviews(business_id)

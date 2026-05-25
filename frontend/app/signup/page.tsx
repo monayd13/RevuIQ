@@ -72,11 +72,15 @@ export default function SignupPage() {
   };
 
   const handleGoogleSignup = () => {
-    // Real Google OAuth signup
-    const clientId = '276713330167-0gvst3ijhaero31e8s83umjvupbd953i.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:3005/auth/callback';
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || `${window.location.origin}/auth/callback`;
     const scope = 'email profile';
-    
+
+    if (!clientId) {
+      setError('Google signup is not configured. Please use the signup form or set NEXT_PUBLIC_GOOGLE_CLIENT_ID.');
+      return;
+    }
+
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
       `client_id=${clientId}&` +
       `redirect_uri=${encodeURIComponent(redirectUri)}&` +
@@ -233,11 +237,11 @@ export default function SignupPage() {
               />
               <label className="text-sm text-gray-600">
                 I agree to the{' '}
-                <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+                <a href="/terms" className="text-blue-600 hover:text-blue-700 font-medium">
                   Terms of Service
                 </a>
                 {' '}and{' '}
-                <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+                <a href="/privacy" className="text-blue-600 hover:text-blue-700 font-medium">
                   Privacy Policy
                 </a>
               </label>

@@ -333,10 +333,10 @@ async def fetch_reviews(business_name: str, location: Optional[str] = None, plat
             mode = "real"
             note = "Fetched from Google Places API"
         else:
-            print(f"⚠️  No API key - using demo reviews")
-            reviews = yelp_fetcher._get_demo_reviews() if yelp_fetcher else []
-            mode = "demo"
-            note = "Demo mode - Add YELP_API_KEY to .env for FREE real reviews (no credit card!)"
+            raise HTTPException(
+                status_code=503,
+                detail="Review fetching is not configured. Set YELP_API_KEY for Yelp or GOOGLE_PLACES_API_KEY for Google Places."
+            )
         
         # Count by platform
         platform_counts = {}

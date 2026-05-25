@@ -483,9 +483,9 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto text-center text-gray-400">
           <p className="mb-4">© 2025 RevuIQ. Powered by AI. Built with ❤️</p>
           <div className="flex justify-center space-x-6 text-sm">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Contact</a>
+            <a href="/privacy" className="hover:text-white transition-colors">Privacy</a>
+            <a href="/terms" className="hover:text-white transition-colors">Terms</a>
+            <a href="/about" className="hover:text-white transition-colors">Contact</a>
           </div>
         </div>
       </footer>

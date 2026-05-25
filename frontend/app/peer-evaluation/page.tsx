@@ -22,37 +22,29 @@ export default function PeerEvaluationPage() {
   const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch existing evaluations
   useEffect(() => {
-    const fetchEvaluations = async () => {
-      try {
-        const response = await fetch('/api/peer-evaluation');
-        const data = await response.json();
-        if (response.ok) {
-          setEvaluations((data.evaluations || []) as Evaluation[]);
-        }
-      } catch (error) {
-        console.error('Error fetching evaluations:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchEvaluations();
+    const savedEvaluations = localStorage.getItem('revuiq_peer_evaluations');
+    if (savedEvaluations) {
+      setEvaluations(JSON.parse(savedEvaluations) as Evaluation[]);
+    }
+    setIsLoading(false);
   }, []);
 
   const handleEvaluationSubmit = (newEvaluation: EvaluationFormValues | Evaluation) => {
+    const evaluationWithOptionalFields = newEvaluation as EvaluationFormValues & Partial<Evaluation>;
     const normalizedEvaluation: Evaluation = {
-      id: 'id' in newEvaluation ? newEvaluation.id : Date.now().toString(),
-      peerId: newEvaluation.peerId,
-      peerName: 'peerName' in newEvaluation ? newEvaluation.peerName : newEvaluation.peerId,
-      rating: newEvaluation.rating,
-      strengths: newEvaluation.strengths,
-      areasForImprovement: newEvaluation.areasForImprovement,
-      feedback: newEvaluation.feedback,
-      createdAt: 'createdAt' in newEvaluation ? newEvaluation.createdAt : new Date().toISOString(),
+      id: evaluationWithOptionalFields.id || Date.now().toString(),
+      peerId: evaluationWithOptionalFields.peerId,
+      peerName: evaluationWithOptionalFields.peerName || evaluationWithOptionalFields.peerId || 'Unknown Peer',
+      rating: evaluationWithOptionalFields.rating,
+      strengths: evaluationWithOptionalFields.strengths,
+      areasForImprovement: evaluationWithOptionalFields.areasForImprovement,
+      feedback: evaluationWithOptionalFields.feedback || '',
+      createdAt: evaluationWithOptionalFields.createdAt || new Date().toISOString(),
     };
-    setEvaluations([normalizedEvaluation, ...evaluations]);
+    const updatedEvaluations = [normalizedEvaluation, ...evaluations];
+    setEvaluations(updatedEvaluations);
+    localStorage.setItem('revuiq_peer_evaluations', JSON.stringify(updatedEvaluations));
     setActiveTab('my-evaluations');
   };
 

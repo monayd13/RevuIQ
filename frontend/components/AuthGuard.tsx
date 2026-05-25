@@ -18,7 +18,7 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(isAuth);
 
       // Public routes (including auth callback for OAuth)
-      const publicRoutes = ['/login', '/signup', '/', '/landing', '/auth/callback'];
+      const publicRoutes = ['/login', '/signup', '/', '/landing', '/auth/callback', '/auth/google/callback', '/terms', '/privacy', '/forgot-password', '/about', '/pricing', '/careers', '/careers/apply'];
       const isPublicRoute = publicRoutes.includes(pathname);
 
       // Redirect logic

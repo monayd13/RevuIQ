@@ -271,9 +271,9 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white">Features</a></li>
-                <li><a href="#" className="hover:text-white">Pricing</a></li>
-                <li><a href="#" className="hover:text-white">Security</a></li>
+                <li><Link href="/landing" className="hover:text-white">Features</Link></li>
+                <li><Link href="/pricing" className="hover:text-white">Pricing</Link></li>
+                <li><Link href="/privacy" className="hover:text-white">Security</Link></li>
               </ul>
             </div>
             
@@ -281,7 +281,7 @@ export default function HomePage() {
               <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-gray-400">
                 <li><Link href="/about" className="hover:text-white">About</Link></li>
-                <li><a href="#" className="hover:text-white">Blog</a></li>
+                <li><Link href="/about" className="hover:text-white">Blog</Link></li>
                 <li><Link href="/careers" className="hover:text-white">Careers</Link></li>
               </ul>
             </div>
@@ -289,9 +289,9 @@ export default function HomePage() {
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white">Privacy</a></li>
-                <li><a href="#" className="hover:text-white">Terms</a></li>
-                <li><a href="#" className="hover:text-white">Contact</a></li>
+                <li><Link href="/privacy" className="hover:text-white">Privacy</Link></li>
+                <li><Link href="/terms" className="hover:text-white">Terms</Link></li>
+                <li><Link href="/about" className="hover:text-white">Contact</Link></li>
               </ul>
             </div>
           </div>

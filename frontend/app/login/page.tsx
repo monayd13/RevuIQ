@@ -57,17 +57,21 @@ export default function LoginPage() {
   };
 
   const handleGoogleLogin = () => {
-    // Use Google Identity Services with token response (simpler, no backend needed)
-    const clientId = '276713330167-0gvst3ijhaero31e8s83umjvupbd953i.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:3005/auth/callback';
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+    const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || `${window.location.origin}/auth/callback`;
     const scope = 'email profile';
-    
+
+    if (!clientId) {
+      setError('Google login is not configured. Please use email/password login or set NEXT_PUBLIC_GOOGLE_CLIENT_ID.');
+      return;
+    }
+
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
       `client_id=${clientId}&` +
       `redirect_uri=${encodeURIComponent(redirectUri)}&` +
-      `response_type=token&` + // Changed to token instead of code
+      `response_type=token&` +
       `scope=${encodeURIComponent(scope)}&` +
-      `prompt=select_account`; // Changed to select_account for better UX
+      `prompt=select_account`;
     
     window.location.href = googleAuthUrl;
   };
@@ -165,7 +169,7 @@ export default function LoginPage() {
                 />
                 <span className="text-gray-600">Remember me</span>
               </label>
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+              <a href="/forgot-password" className="text-blue-600 hover:text-blue-700 font-medium">
                 Forgot password?
               </a>
             </div>
@@ -221,9 +225,9 @@ export default function LoginPage() {
         {/* Footer */}
         <p className="mt-8 text-center text-sm text-gray-500">
           By signing in, you agree to our{' '}
-          <a href="#" className="text-gray-700 hover:text-gray-900">Terms</a>
+          <a href="/terms" className="text-gray-700 hover:text-gray-900">Terms</a>
           {' '}and{' '}
-          <a href="#" className="text-gray-700 hover:text-gray-900">Privacy Policy</a>
+          <a href="/privacy" className="text-gray-700 hover:text-gray-900">Privacy Policy</a>
         </p>
       </motion.div>
     </div>

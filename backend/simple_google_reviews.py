@@ -29,8 +29,7 @@ class GoogleReviewsFetcher:
             place_id if found, None otherwise
         """
         if not self.api_key:
-            print("⚠️  No Google API key found. Using demo mode.")
-            return None
+            raise ValueError("GOOGLE_PLACES_API_KEY is required to fetch Google reviews.")
         
         try:
             # Build search query
@@ -73,7 +72,7 @@ class GoogleReviewsFetcher:
             List of review dictionaries
         """
         if not self.api_key:
-            return self._get_demo_reviews()
+            raise ValueError("GOOGLE_PLACES_API_KEY is required to fetch Google reviews.")
         
         try:
             # Get place details including reviews
@@ -106,11 +105,11 @@ class GoogleReviewsFetcher:
                 return formatted_reviews
             else:
                 print(f"❌ Failed to get reviews: {data.get('status')}")
-                return self._get_demo_reviews()
+                raise RuntimeError(f"Google Places API failed with status {data.get('status')}")
                 
         except Exception as e:
             print(f"❌ Error fetching reviews: {e}")
-            return self._get_demo_reviews()
+            raise
     
     def fetch_restaurant_reviews(self, restaurant_name: str, location: str = "") -> List[Dict]:
         """
@@ -129,8 +128,7 @@ class GoogleReviewsFetcher:
         place_id = self.search_restaurant(restaurant_name, location)
         
         if not place_id:
-            print("⚠️  Using demo reviews instead")
-            return self._get_demo_reviews()
+            raise LookupError(f"Restaurant not found on Google Places: {restaurant_name}")
         
         # Get reviews
         return self.get_reviews(place_id)
