@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 
 export function getBackendApiUrl() {
-  return process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+  return process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'https://revuiq-production.up.railway.app';
 }
 
 export function missingBackendResponse() {
@@ -15,9 +15,6 @@ export function missingBackendResponse() {
 export async function proxyBackendRequest(path: string, init?: RequestInit) {
   const baseUrl = getBackendApiUrl();
 
-  if (process.env.NODE_ENV === 'production' && baseUrl.includes('localhost')) {
-    return missingBackendResponse();
-  }
 
   // Forward Authorization header from the incoming request
   const incomingHeaders = await headers();
