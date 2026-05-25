@@ -17,11 +17,6 @@ python-multipart>=0.0.6
 # Environment
 python-dotenv>=1.0.0
 
-# NLP Dependencies (use latest compatible versions)
-transformers>=4.35.0
-torch>=2.0.0
-sentencepiece>=0.1.99
-
 # API Integrations
 requests>=2.31.0
 httpx>=0.25.0
@@ -32,8 +27,12 @@ python-dateutil>=2.8.0
 # Rate limiting
 slowapi>=0.1.9
 
-# NLP extras
-nltk>=3.8.1
+# NLP (lightweight — no torch/GPU required)
+vaderSentiment>=3.3.2
 textblob>=0.17.1
+nltk>=3.8.1
 scikit-learn>=1.3.0
 numpy>=1.24.0
+
+# Groq API for response generation
+groq>=0.4.0
