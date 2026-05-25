@@ -60,6 +60,7 @@ app.add_middleware(
         "http://localhost:3000",
         "http://localhost:3005",
         "https://revuiq.vercel.app",
+        "https://revuiq-production.up.railway.app",
         os.getenv("FRONTEND_URL", ""),
     ],
     allow_credentials=True,
@@ -369,6 +370,127 @@ def process_review_full(text: str, business_name: str, rating: Optional[float] =
         "aspects": aspect_result,
         "ai_response": ai_response,
     }
+
+
+# ==================== AUTH MODELS ====================
+
+class UserSignupRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(..., min_length=6)
+    full_name: str = Field(..., min_length=1, max_length=200)
+    business_name: Optional[str] = Field(None, max_length=200)
+
+class UserLoginRequest(BaseModel):
+    email: EmailStr
+    password: str
+
+
+# ==================== AUTH ENDPOINTS ====================
+
+@app.post("/api/auth/signup")
+async def signup(user_data: UserSignupRequest, db: Session = Depends(get_db)):
+    if not DB_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Database not available")
+    try:
+        from auth import create_user, create_access_token, UserCreate
+        from database import User
+        existing = db.query(User).filter(User.email == user_data.email).first()
+        if existing:
+            raise HTTPException(status_code=400, detail="Email already registered")
+        from auth import get_password_hash
+        from database import Business
+        business_id = None
+        if user_data.business_name:
+            biz = Business(name=user_data.business_name, industry="restaurant")
+            db.add(biz)
+            db.commit()
+            db.refresh(biz)
+            business_id = biz.id
+        user = User(
+            email=user_data.email,
+            hashed_password=get_password_hash(user_data.password),
+            full_name=user_data.full_name,
+            business_id=business_id,
+            role="admin" if business_id else "manager"
+        )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
+        from auth import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+        token = create_access_token({"sub": user.email, "user_id": user.id})
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "full_name": user.full_name,
+                "role": user.role,
+                "business_id": user.business_id,
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Signup error: %s", e)
+        raise HTTPException(status_code=500, detail="Signup failed")
+
+
+@app.post("/api/auth/login")
+async def login(credentials: UserLoginRequest, db: Session = Depends(get_db)):
+    if not DB_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Database not available")
+    try:
+        from auth import authenticate_user, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+        user = authenticate_user(db, credentials.email, credentials.password)
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid email or password")
+        token = create_access_token({"sub": user.email, "user_id": user.id})
+        return {
+            "access_token": token,
+            "token_type": "bearer",
+            "expires_in": ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            "user": {
+                "id": user.id,
+                "email": user.email,
+                "full_name": user.full_name,
+                "role": user.role,
+                "business_id": user.business_id,
+            }
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error("Login error: %s", e)
+        raise HTTPException(status_code=500, detail="Login failed")
+
+
+@app.get("/api/auth/me")
+async def get_me(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+):
+    if not DB_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Database not available")
+    try:
+        from auth import decode_access_token
+        from database import User
+        token_data = decode_access_token(credentials.credentials)
+        user = db.query(User).filter(User.email == token_data.email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return {
+            "id": user.id,
+            "email": user.email,
+            "full_name": user.full_name,
+            "role": user.role,
+            "business_id": user.business_id,
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Invalid token")
 
 
 # ==================== HEALTH / ROOT ====================

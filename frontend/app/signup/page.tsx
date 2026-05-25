@@ -4,6 +4,8 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, User, Sparkles, ArrowRight, Building } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { setAuth } from '@/lib/auth';
+import { API_BASE_URL } from '@/lib/api-config';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,59 +17,49 @@ export default function SignupPage() {
     confirmPassword: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
-    // Validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match');
       return;
     }
-
     if (formData.password.length < 6) {
       setError('Password must be at least 6 characters');
       return;
     }
 
-    // Store user account in database
-    if (formData.email && formData.password && formData.name) {
-      // Get existing users from localStorage database
-      const usersDB = localStorage.getItem('revuiq_users');
-      const users = usersDB ? JSON.parse(usersDB) : [];
-
-      // Check if email already exists
-      const existingUser = users.find((u: any) => u.email === formData.email);
-      if (existingUser) {
-        setError('An account with this email already exists');
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          full_name: formData.name,
+          business_name: formData.company || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.detail || 'Signup failed. Please try again.');
         return;
       }
-
-      // Create new user account
-      const newUser = {
-        id: Date.now().toString(),
-        name: formData.name,
-        email: formData.email,
-        password: formData.password, // In production, this would be hashed
-        company: formData.company,
-        createdAt: new Date().toISOString(),
-        provider: 'email'
-      };
-
-      // Add to users database
-      users.push(newUser);
-      localStorage.setItem('revuiq_users', JSON.stringify(users));
-
-      // Log the user in
-      localStorage.setItem('isAuthenticated', 'true');
-      localStorage.setItem('userData', JSON.stringify({
-        name: newUser.name,
-        email: newUser.email,
-        company: newUser.company
-      }));
-      document.cookie = 'isAuthenticated=true; path=/; max-age=86400; SameSite=Lax';
+      setAuth(data.access_token, {
+        name: data.user.full_name,
+        email: data.user.email,
+        role: data.user.role,
+        business_id: data.user.business_id,
+      });
       router.push('/dashboard');
+    } catch {
+      setError('Unable to connect to server. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -252,10 +244,11 @@ export default function SignupPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 transition-all duration-300 flex items-center justify-center space-x-2"
+              disabled={loading}
+              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-60"
             >
-              <span>Create Account</span>
-              <ArrowRight className="w-5 h-5" />
+              <span>{loading ? 'Creating account...' : 'Create Account'}</span>
+              {!loading && <ArrowRight className="w-5 h-5" />}
             </motion.button>
           </form>
 

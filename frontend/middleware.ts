@@ -11,8 +11,8 @@ export function middleware(request: NextRequest) {
   );
 
   const isAuthenticated =
-    request.cookies.get('isAuthenticated')?.value === 'true' ||
-    request.cookies.get('auth_token')?.value;
+    request.cookies.get('auth_token')?.value ||
+    request.cookies.get('isAuthenticated')?.value === 'true';
 
   if (!isPublicRoute && !isAuthenticated) {
     const loginUrl = new URL('/login', request.url);

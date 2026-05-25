@@ -4,6 +4,8 @@ import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
+import { setAuth } from '@/lib/auth';
+import { API_BASE_URL } from '@/lib/api-config';
 
 function AuthCallbackInner() {
   const router = useRouter();
@@ -74,17 +76,44 @@ function AuthCallbackInner() {
           existingUser = newUser;
         }
 
-        // Store authentication data with real user info
-        localStorage.setItem('isAuthenticated', 'true');
-        localStorage.setItem('userData', JSON.stringify({
-          name: existingUser.name,
-          email: existingUser.email,
-          picture: existingUser.picture,
-          company: existingUser.company || '',
-          provider: 'google'
-        }));
-        // Set cookie so middleware can detect auth state
-        document.cookie = 'isAuthenticated=true; path=/; max-age=86400; SameSite=Lax';
+        // Register/login with backend to get JWT
+        try {
+          // Try login first, then signup if not found
+          let backendRes = await fetch(`${API_BASE_URL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: userInfo.email, password: `google_${userInfo.id}` }),
+          });
+          if (!backendRes.ok) {
+            backendRes = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: userInfo.email,
+                password: `google_${userInfo.id}`,
+                full_name: userInfo.name || userInfo.email.split('@')[0],
+              }),
+            });
+          }
+          if (backendRes.ok) {
+            const backendData = await backendRes.json();
+            setAuth(backendData.access_token, {
+              name: backendData.user.full_name,
+              email: backendData.user.email,
+              role: backendData.user.role,
+              business_id: backendData.user.business_id,
+              picture: userInfo.picture,
+            });
+          }
+        } catch {
+          // If backend unavailable, fall back to cookie-only auth
+          setAuth('google_session', {
+            name: userInfo.name,
+            email: userInfo.email,
+            picture: userInfo.picture,
+            provider: 'google',
+          });
+        }
 
         setStatus('success');
         setMessage(`Welcome ${existingUser.name}! Redirecting...`);

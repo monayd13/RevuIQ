@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { User, LogOut } from "lucide-react";
+import { clearAuth, getUserData, getToken } from "@/lib/auth";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -12,29 +13,22 @@ export default function Navbar() {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    // Check authentication status
-    const authStatus = localStorage.getItem('isAuthenticated');
-    const userData = localStorage.getItem('userData');
-    
-    if (authStatus === 'true') {
+    const token = getToken();
+    const userData = getUserData();
+    if (token && userData) {
       setIsAuthenticated(true);
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          setUserName(user.name || user.email || 'User');
-        } catch (e) {
-          setUserName('User');
-        }
-      }
+      setUserName((userData.name as string) || (userData.email as string) || 'User');
+    } else {
+      setIsAuthenticated(false);
+      setUserName('');
     }
-  }, [pathname]); // Re-check on route change
+  }, [pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userData');
+    clearAuth();
     setIsAuthenticated(false);
     setUserName('');
-    router.push('/landing');
+    router.push('/login');
   };
 
   const isActive = (path: string) => {

@@ -4,58 +4,43 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, Sparkles, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { setAuth } from '@/lib/auth';
+import { API_BASE_URL } from '@/lib/api-config';
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address');
-      return;
+    setLoading(true);
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.detail || 'Invalid email or password');
+        return;
+      }
+      setAuth(data.access_token, {
+        name: data.user.full_name,
+        email: data.user.email,
+        role: data.user.role,
+        business_id: data.user.business_id,
+      });
+      router.push('/dashboard');
+    } catch {
+      setError('Unable to connect to server. Please try again.');
+    } finally {
+      setLoading(false);
     }
-
-    // Password validation
-    if (password.length < 6) {
-      setError('Password must be at least 6 characters');
-      return;
-    }
-
-    // Get users from database
-    const usersDB = localStorage.getItem('revuiq_users');
-    const users = usersDB ? JSON.parse(usersDB) : [];
-
-    // Find user by email
-    const user = users.find((u: any) => u.email === email);
-
-    if (!user) {
-      setError('No account found with this email. Please sign up first.');
-      return;
-    }
-
-    // Check password
-    if (user.password !== password) {
-      setError('Incorrect password. Please try again.');
-      return;
-    }
-
-    // Login successful
-    localStorage.setItem('isAuthenticated', 'true');
-    localStorage.setItem('userData', JSON.stringify({
-      name: user.name,
-      email: user.email,
-      company: user.company || ''
-    }));
-    // Set cookie so middleware can detect auth state
-    document.cookie = 'isAuthenticated=true; path=/; max-age=86400; SameSite=Lax';
-    router.push('/dashboard');
   };
 
   const handleGoogleLogin = () => {
@@ -181,10 +166,11 @@ export default function LoginPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               type="submit"
-              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 transition-all duration-300 flex items-center justify-center space-x-2"
+              disabled={loading}
+              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-60"
             >
-              <span>Sign in</span>
-              <ArrowRight className="w-5 h-5" />
+              <span>{loading ? 'Signing in...' : 'Sign in'}</span>
+              {!loading && <ArrowRight className="w-5 h-5" />}
             </motion.button>
           </form>
 
