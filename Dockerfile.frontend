@@ -24,6 +24,6 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
-ENV PORT=3000
 
-CMD ["node", "server.js"]
+# Railway injects PORT at runtime; default to 3000 locally
+CMD ["sh", "-c", "PORT=${PORT:-3000} node server.js"]

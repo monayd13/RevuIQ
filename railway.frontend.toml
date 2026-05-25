@@ -2,6 +2,7 @@
 dockerfilePath = "Dockerfile.frontend"
 
 [deploy]
+startCommand = "sh -c 'PORT=${PORT:-3000} node server.js'"
 healthcheckPath = "/"
 healthcheckTimeout = 60
 restartPolicyType = "on_failure"
