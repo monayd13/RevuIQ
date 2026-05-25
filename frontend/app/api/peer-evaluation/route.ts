@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
-import { db } from '@/lib/db';
 import { getCurrentUser } from '@/lib/session';
 
 // Schema for evaluation
@@ -21,7 +20,7 @@ export async function GET() {
 
     // In a real app, you would fetch evaluations from your database
     // This is a mock implementation
-    const evaluations = [];
+    const evaluations: unknown[] = [];
     
     return NextResponse.json({ evaluations });
   } catch (error) {
@@ -57,7 +56,7 @@ export async function POST(request: Request) {
     return NextResponse.json(newEvaluation);
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return new NextResponse(JSON.stringify(error.errors), { status: 422 });
+      return new NextResponse(JSON.stringify(error.issues), { status: 422 });
     }
     
     console.error('Error creating evaluation:', error);

@@ -1,14 +1,25 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import EvaluationForm from './components/EvaluationForm';
+import EvaluationForm, { type EvaluationFormValues } from './components/EvaluationForm';
 import EvaluationList from './components/EvaluationList';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
+type Evaluation = {
+  id: string;
+  peerId?: string;
+  peerName: string;
+  rating: number;
+  strengths: string;
+  areasForImprovement: string;
+  feedback: string;
+  createdAt: string;
+};
+
 export default function PeerEvaluationPage() {
   const [activeTab, setActiveTab] = useState('evaluate');
-  const [evaluations, setEvaluations] = useState([]);
+  const [evaluations, setEvaluations] = useState<Evaluation[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Fetch existing evaluations
@@ -18,7 +29,7 @@ export default function PeerEvaluationPage() {
         const response = await fetch('/api/peer-evaluation');
         const data = await response.json();
         if (response.ok) {
-          setEvaluations(data.evaluations || []);
+          setEvaluations((data.evaluations || []) as Evaluation[]);
         }
       } catch (error) {
         console.error('Error fetching evaluations:', error);
@@ -30,8 +41,18 @@ export default function PeerEvaluationPage() {
     fetchEvaluations();
   }, []);
 
-  const handleEvaluationSubmit = (newEvaluation) => {
-    setEvaluations([newEvaluation, ...evaluations]);
+  const handleEvaluationSubmit = (newEvaluation: EvaluationFormValues | Evaluation) => {
+    const normalizedEvaluation: Evaluation = {
+      id: 'id' in newEvaluation ? newEvaluation.id : Date.now().toString(),
+      peerId: newEvaluation.peerId,
+      peerName: 'peerName' in newEvaluation ? newEvaluation.peerName : newEvaluation.peerId,
+      rating: newEvaluation.rating,
+      strengths: newEvaluation.strengths,
+      areasForImprovement: newEvaluation.areasForImprovement,
+      feedback: newEvaluation.feedback,
+      createdAt: 'createdAt' in newEvaluation ? newEvaluation.createdAt : new Date().toISOString(),
+    };
+    setEvaluations([normalizedEvaluation, ...evaluations]);
     setActiveTab('my-evaluations');
   };
 

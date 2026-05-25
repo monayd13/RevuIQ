@@ -33,7 +33,7 @@ const evaluationSchema = z.object({
   areasForImprovement: z.string().min(1, 'Please mention at least one area for improvement'),
 });
 
-type EvaluationFormValues = z.infer<typeof evaluationSchema>;
+export type EvaluationFormValues = z.infer<typeof evaluationSchema>;
 
 interface EvaluationFormProps {
   onSubmit: (data: EvaluationFormValues) => void;

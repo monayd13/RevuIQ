@@ -2,10 +2,11 @@ import { NextResponse } from 'next/server';
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const response = await fetch(`http://localhost:8000/api/restaurants/${params.id}`, {
+    const { id } = await params;
+    const response = await fetch(`http://localhost:8000/api/restaurants/${id}`, {
       method: 'DELETE',
     });
     const data = await response.json();
