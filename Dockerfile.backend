@@ -7,18 +7,15 @@ WORKDIR /app
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
+    g++ \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements
+# Copy and install requirements
 COPY backend/requirements.txt .
-COPY requirements.txt ./requirements_base.txt
-
-# Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir -r requirements_base.txt
-RUN pip install sqlalchemy psycopg2-binary
 
-# Download TextBlob corpora
+# Download NLTK + TextBlob corpora
+RUN python -c "import nltk; nltk.download('punkt'); nltk.download('stopwords'); nltk.download('averaged_perceptron_tagger')"
 RUN python -m textblob.download_corpora
 
 # Copy application code
@@ -28,8 +25,9 @@ COPY nlp_pipeline/ ./nlp_pipeline/
 # Set Python path
 ENV PYTHONPATH=/app
 
-# Expose port
-EXPOSE 8000
+# Railway injects PORT env var — bind to it
+ENV PORT=8000
+EXPOSE $PORT
 
 # Run the application
-CMD ["python", "backend/main_complete.py"]
+CMD ["sh", "-c", "uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
