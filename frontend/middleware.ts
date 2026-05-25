@@ -1,26 +1,25 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
+const PUBLIC_ROUTES = ['/', '/login', '/signup', '/forgot-password', '/about', '/pricing', '/privacy', '/terms', '/careers'];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Public routes that don't require authentication
-  const publicRoutes = ['/login', '/signup', '/'];
-  
-  // Check if the current path is public
-  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    route => pathname === route || pathname.startsWith('/landing')
+  );
 
-  // Get auth token from cookie or check localStorage (for client-side)
-  const isAuthenticated = request.cookies.get('isAuthenticated')?.value === 'true';
+  const isAuthenticated =
+    request.cookies.get('isAuthenticated')?.value === 'true' ||
+    request.cookies.get('auth_token')?.value;
 
-  // If trying to access protected route without auth, redirect to login
   if (!isPublicRoute && !isAuthenticated) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('redirect', pathname);
     return NextResponse.redirect(loginUrl);
   }
 
-  // If authenticated and trying to access login/signup, redirect to dashboard
   if (isAuthenticated && (pathname === '/login' || pathname === '/signup')) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
@@ -29,14 +28,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|public).*)'],
 };

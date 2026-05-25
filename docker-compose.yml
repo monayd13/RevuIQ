@@ -7,7 +7,7 @@ services:
     container_name: revuiq-database
     environment:
       POSTGRES_USER: revuiq
-      POSTGRES_PASSWORD: revuiq_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-revuiq_password}
       POSTGRES_DB: revuiq_db
     ports:
       - "5432:5432"
@@ -28,7 +28,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://revuiq:revuiq_password@database:5432/revuiq_db
+      - DATABASE_URL=postgresql://revuiq:${POSTGRES_PASSWORD:-revuiq_password}@database:5432/revuiq_db
+      - SECRET_KEY=${SECRET_KEY}
+      - FRONTEND_URL=${FRONTEND_URL}
       - GOOGLE_PLACES_API_KEY=${GOOGLE_PLACES_API_KEY}
       - YELP_API_KEY=${YELP_API_KEY}
       - META_ACCESS_TOKEN=${META_ACCESS_TOKEN}
