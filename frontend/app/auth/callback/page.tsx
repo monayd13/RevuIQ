@@ -124,11 +124,12 @@ function AuthCallbackInner() {
         }
 
         setStatus('success');
-        setMessage(`Welcome ${existingUser.name}! Redirecting...`);
-        
+        setMessage(`Welcome ${userInfo.name}! Redirecting...`);
+
+        // Use full reload so middleware picks up the new auth cookies
         setTimeout(() => {
-          router.push('/dashboard');
-        }, 1500);
+          window.location.href = '/dashboard';
+        }, 1000);
 
       } catch (err) {
         console.error('Authentication error:', err);
