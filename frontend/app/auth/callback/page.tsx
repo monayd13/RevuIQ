@@ -76,16 +76,22 @@ function AuthCallbackInner() {
           existingUser = newUser;
         }
 
-        // Register/login with backend to get JWT
+        // Register/login with backend to get JWT (5s timeout)
+        const fetchWithTimeout = (url: string, options: RequestInit) => {
+          const controller = new AbortController();
+          const id = setTimeout(() => controller.abort(), 5000);
+          return fetch(url, { ...options, signal: controller.signal })
+            .finally(() => clearTimeout(id));
+        };
+
         try {
-          // Try login first, then signup if not found
-          let backendRes = await fetch(`${API_BASE_URL}/api/auth/login`, {
+          let backendRes = await fetchWithTimeout(`${API_BASE_URL}/api/auth/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email: userInfo.email, password: `google_${userInfo.id}` }),
           });
           if (!backendRes.ok) {
-            backendRes = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+            backendRes = await fetchWithTimeout(`${API_BASE_URL}/api/auth/signup`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
@@ -104,9 +110,11 @@ function AuthCallbackInner() {
               business_id: backendData.user.business_id,
               picture: userInfo.picture,
             });
+          } else {
+            throw new Error('Backend auth failed');
           }
         } catch {
-          // If backend unavailable, fall back to cookie-only auth
+          // Backend unavailable — set session cookie so middleware lets user through
           setAuth('google_session', {
             name: userInfo.name,
             email: userInfo.email,
