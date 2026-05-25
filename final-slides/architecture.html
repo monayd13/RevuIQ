@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>System Architecture</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #0f172a;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            padding: 80px 100px;
+        }
+        
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+        
+        .diagram {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 60px;
+            height: 820px;
+            position: relative;
+        }
+        
+        /* Components */
+        .component {
+            position: absolute;
+            text-align: center;
+        }
+        
+        .box {
+            background: #0f172a;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 25px 35px;
+            margin-bottom: 10px;
+        }
+        
+        .box-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        
+        .box-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        /* Arrows */
+        .arrow {
+            position: absolute;
+            color: #3b82f6;
+            font-size: 48px;
+            font-weight: 900;
+        }
+        
+        .arrow-label {
+            position: absolute;
+            font-size: 16px;
+            color: #94a3b8;
+            text-align: center;
+            max-width: 150px;
+        }
+        
+        /* Positions - Top Row */
+        .google { top: 60px; left: 60px; }
+        .connector { top: 60px; left: 380px; }
+        .nlp { top: 60px; left: 700px; }
+        .api { top: 60px; right: 380px; }
+        .frontend { top: 60px; right: 60px; }
+        
+        /* Positions - Bottom Row */
+        .database { bottom: 60px; left: 60px; }
+        .fastapi { bottom: 60px; left: 380px; }
+        .nextjs { bottom: 60px; right: 380px; }
+        .user { bottom: 60px; right: 60px; }
+        
+        /* Center */
+        .localhost {
+            position: absolute;
+            bottom: 320px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 24px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        .localhost-title {
+            font-size: 32px;
+            color: #ffffff;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>System Architecture</h1>
+    
+    <div class="diagram">
+        <!-- Top Row -->
+        <div class="component google">
+            <div class="box">
+                <div class="box-title">Google Places</div>
+                <div class="box-subtitle">API</div>
+            </div>
+        </div>
+        
+        <div class="arrow" style="top: 95px; left: 280px;">→</div>
+        <div class="arrow-label" style="top: 60px; left: 290px;">Fetch<br>Reviews</div>
+        
+        <div class="component connector">
+            <div class="box">
+                <div class="box-title">Connector</div>
+                <div class="box-subtitle">Python</div>
+            </div>
+        </div>
+        
+        <div class="arrow" style="top: 95px; left: 600px;">→</div>
+        <div class="arrow-label" style="top: 60px; left: 610px;">Send<br>Text</div>
+        
+        <div class="component nlp">
+            <div class="box" style="border-color: #10b981;">
+                <div class="box-title">NLP Engine</div>
+                <div class="box-subtitle">TextBlob</div>
+            </div>
+        </div>
+        
+        <div class="arrow" style="top: 95px; left: 920px;">→</div>
+        <div class="arrow-label" style="top: 60px; left: 930px;">Analysis<br>Results</div>
+        
+        <div class="component api">
+            <div class="box">
+                <div class="box-title">Backend</div>
+                <div class="box-subtitle">FastAPI</div>
+            </div>
+        </div>
+        
+        <div class="arrow" style="top: 95px; right: 280px;">→</div>
+        <div class="arrow-label" style="top: 60px; right: 290px;">Serve<br>Data</div>
+        
+        <div class="component frontend">
+            <div class="box">
+                <div class="box-title">Dashboard</div>
+                <div class="box-subtitle">Next.js</div>
+            </div>
+        </div>
+        
+        <!-- Bottom Row -->
+        <div class="component database">
+            <div class="box" style="border-color: #10b981;">
+                <div class="box-title">Database</div>
+                <div class="box-subtitle">PostgreSQL</div>
+            </div>
+        </div>
+        
+        <div class="arrow" style="bottom: 95px; left: 280px; transform: rotate(180deg);">→</div>
+        <div class="arrow-label" style="bottom: 60px; left: 290px;">Store &<br>Retrieve</div>
+        
+        <div class="component fastapi">
+            <div class="box">
+                <div class="box-title">API Server</div>
+                <div class="box-subtitle">FastAPI</div>
+            </div>
+        </div>
+        
+        <div class="arrow" style="bottom: 95px; left: 600px; transform: rotate(180deg);">→</div>
+        <div class="arrow-label" style="bottom: 60px; left: 610px;">REST<br>API</div>
+        
+        <div class="component nextjs">
+            <div class="box">
+                <div class="box-title">Frontend</div>
+                <div class="box-subtitle">React</div>
+            </div>
+        </div>
+        
+        <div class="arrow" style="bottom: 95px; right: 280px; transform: rotate(180deg);">→</div>
+        <div class="arrow-label" style="bottom: 60px; right: 290px;">User<br>Actions</div>
+        
+        <div class="component user">
+            <div class="box" style="border-color: #ef4444;">
+                <div class="box-title">User</div>
+                <div class="box-subtitle">Browser</div>
+            </div>
+        </div>
+        
+        <!-- Vertical Arrows -->
+        <div class="arrow" style="top: 280px; left: 450px; transform: rotate(90deg);">→</div>
+        <div class="arrow" style="top: 280px; right: 450px; transform: rotate(90deg);">→</div>
+        
+        <!-- Center Label -->
+        <div class="localhost">
+            <div class="localhost-title">Local Development</div>
+            <div>localhost:3005 • localhost:8000</div>
+        </div>
+    </div>
+</body>
+</html>

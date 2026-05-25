@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>System Architecture</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #ffffff;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            padding: 80px 120px;
+        }
+        
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 80px;
+            color: #1e40af;
+            text-align: center;
+        }
+        
+        .flow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .layer {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .box {
+            background: #ffffff;
+            border: 3px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 45px 60px;
+            text-align: center;
+            min-width: 280px;
+            transition: all 0.3s ease;
+        }
+        
+        .box:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+        }
+        
+        .box-label {
+            font-size: 16px;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+        
+        .box-title {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+        
+        .box-tech {
+            font-size: 20px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        /* Special colors */
+        .source { border-color: #3b82f6; }
+        .source .box-title { color: #3b82f6; }
+        
+        .nlp { border-color: #10b981; }
+        .nlp .box-title { color: #10b981; }
+        
+        .storage { border-color: #8b5cf6; }
+        .storage .box-title { color: #8b5cf6; }
+        
+        .presentation { border-color: #06b6d4; }
+        .presentation .box-title { color: #06b6d4; }
+        
+        .user { border-color: #ef4444; }
+        .user .box-title { color: #ef4444; }
+        
+        /* Arrows */
+        .arrow-down {
+            font-size: 64px;
+            color: #cbd5e0;
+            font-weight: 900;
+        }
+        
+        .arrow-right {
+            font-size: 64px;
+            color: #cbd5e0;
+            font-weight: 900;
+        }
+        
+        .flow-label {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 700;
+            text-align: center;
+            margin: -20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>System Architecture</h1>
+    
+    <div class="flow">
+        <!-- Layer 1: Source -->
+        <div class="layer">
+            <div class="box source">
+                <div class="box-label">Data Source</div>
+                <div class="box-title">Google Places</div>
+                <div class="box-tech">Review API</div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        <div class="flow-label">Fetch Customer Reviews</div>
+        
+        <!-- Layer 2: NLP Processing -->
+        <div class="layer">
+            <div class="box nlp">
+                <div class="box-label">NLP Engine</div>
+                <div class="box-title">TextBlob</div>
+                <div class="box-tech">Sentiment • Emotions • Aspects</div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        <div class="flow-label">AI Analysis Results</div>
+        
+        <!-- Layer 3: Storage & Backend -->
+        <div class="layer">
+            <div class="box storage">
+                <div class="box-label">Database</div>
+                <div class="box-title">PostgreSQL</div>
+                <div class="box-tech">Supabase</div>
+            </div>
+            
+            <div class="arrow-right">←→</div>
+            
+            <div class="box storage">
+                <div class="box-label">Backend API</div>
+                <div class="box-title">FastAPI</div>
+                <div class="box-tech">Python</div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        <div class="flow-label">REST API Endpoints</div>
+        
+        <!-- Layer 4: Frontend -->
+        <div class="layer">
+            <div class="box presentation">
+                <div class="box-label">Frontend</div>
+                <div class="box-title">Next.js</div>
+                <div class="box-tech">React • Tailwind CSS</div>
+            </div>
+        </div>
+        
+        <div class="arrow-down">↓</div>
+        <div class="flow-label">Live Dashboard</div>
+        
+        <!-- Layer 5: User -->
+        <div class="layer">
+            <div class="box user">
+                <div class="box-label">End User</div>
+                <div class="box-title">Browser</div>
+                <div class="box-tech">localhost:3005</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

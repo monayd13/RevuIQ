@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>Live Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #0A0E27;
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            padding: 100px 120px;
+        }
+        
+        h1 {
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .demo-container {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 60px;
+            backdrop-filter: blur(20px);
+        }
+        
+        .review-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .review-card::before {
+            content: '"';
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            font-size: 120px;
+            opacity: 0.1;
+            font-weight: 900;
+        }
+        
+        .review-text {
+            font-size: 36px;
+            line-height: 1.6;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .metric-card {
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .metric-label {
+            font-size: 20px;
+            color: #a0aec0;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .metric-value {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .details {
+            background: rgba(240, 147, 251, 0.05);
+            border: 2px solid rgba(240, 147, 251, 0.2);
+            border-radius: 20px;
+            padding: 35px;
+            margin-bottom: 30px;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 26px;
+        }
+        
+        .detail-label {
+            color: #f093fb;
+            font-weight: 700;
+        }
+        
+        .detail-value {
+            color: #cbd5e0;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        .response-card {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.2) 100%);
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            border-radius: 20px;
+            padding: 40px;
+        }
+        
+        .response-label {
+            font-size: 24px;
+            color: #10b981;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .response-text {
+            font-size: 28px;
+            line-height: 1.7;
+            color: #cbd5e0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live NLP Analysis Demo</h1>
+    
+    <div class="demo-container">
+        <div class="review-card">
+            <div class="review-text">
+                "The food was absolutely amazing! Best restaurant I have ever been to. The service was excellent and the atmosphere was perfect!"
+            </div>
+        </div>
+        
+        <div class="analysis-grid">
+            <div class="metric-card">
+                <div class="metric-label">Sentiment</div>
+                <div class="metric-value">POSITIVE</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Score</div>
+                <div class="metric-value">0.969</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Polarity</div>
+                <div class="metric-value">+0.938</div>
+            </div>
+        </div>
+        
+        <div class="details">
+            <div class="detail-row">
+                <span class="detail-label">Emotions:</span>
+                <span class="detail-value">Joy (0.85), Admiration (0.72)</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Aspects:</span>
+                <span class="detail-value">Food, Service, Ambiance</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">NLP Engine:</span>
+                <span class="detail-value">TextBlob (Naive Bayes)</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Processing Time:</span>
+                <span class="detail-value">1.01 seconds</span>
+            </div>
+        </div>
+        
+        <div class="response-card">
+            <div class="response-label">AI-Generated Response</div>
+            <div class="response-text">
+                "Thank you so much for your kind words! We're delighted you had a great experience at our restaurant. See you again soon!"
+            </div>
+        </div>
+    </div>
+</body>
+</html>

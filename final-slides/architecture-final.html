@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>System Architecture Overview</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #1a1f2e;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            padding: 60px 80px;
+        }
+        
+        h1 {
+            font-size: 56px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+        
+        .diagram-container {
+            background: #242938;
+            border-radius: 24px;
+            padding: 80px;
+            position: relative;
+            height: 820px;
+        }
+        
+        /* Node styling */
+        .node {
+            position: absolute;
+            background: #1a1f2e;
+            border: 2px solid;
+            border-radius: 12px;
+            padding: 28px 40px;
+            text-align: center;
+            min-width: 180px;
+        }
+        
+        .node-title {
+            font-size: 26px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+        
+        .node-subtitle {
+            font-size: 16px;
+            color: #8b92a7;
+            font-weight: 600;
+        }
+        
+        /* Color coding */
+        .blue-node {
+            border-color: #3b82f6;
+        }
+        .blue-node .node-title {
+            color: #3b82f6;
+        }
+        
+        .green-node {
+            border-color: #10b981;
+        }
+        .green-node .node-title {
+            color: #10b981;
+        }
+        
+        .red-node {
+            border-color: #ef4444;
+        }
+        .red-node .node-title {
+            color: #ef4444;
+        }
+        
+        /* Arrows */
+        .arrow {
+            position: absolute;
+            color: #4b5563;
+            font-size: 32px;
+            font-weight: 900;
+        }
+        
+        .arrow-label {
+            position: absolute;
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 600;
+        }
+        
+        /* Top row positions */
+        .google { top: 80px; left: 80px; }
+        .connector { top: 80px; left: 340px; }
+        .nlp { top: 80px; left: 600px; }
+        .backend { top: 80px; left: 860px; }
+        .dashboard { top: 80px; right: 80px; }
+        
+        /* Bottom row positions */
+        .database { bottom: 80px; left: 80px; }
+        .api-server { bottom: 80px; left: 340px; }
+        .frontend { bottom: 80px; right: 340px; }
+        .user { bottom: 80px; right: 80px; }
+        
+        /* Center label */
+        .center-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+        
+        .center-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        
+        .center-subtitle {
+            font-size: 18px;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <h1>System Architecture Overview</h1>
+    
+    <div class="diagram-container">
+        <!-- Top Row -->
+        <div class="node blue-node google">
+            <div class="node-title">Google Places</div>
+            <div class="node-subtitle">API</div>
+        </div>
+        
+        <div class="arrow" style="top: 105px; left: 280px;">→</div>
+        <div class="arrow-label" style="top: 75px; left: 285px;">Fetch<br>Reviews</div>
+        
+        <div class="node blue-node connector">
+            <div class="node-title">Connector</div>
+            <div class="node-subtitle">Python</div>
+        </div>
+        
+        <div class="arrow" style="top: 105px; left: 540px;">→</div>
+        <div class="arrow-label" style="top: 75px; left: 545px;">Send<br>Text</div>
+        
+        <div class="node green-node nlp">
+            <div class="node-title">NLP Engine</div>
+            <div class="node-subtitle">TextBlob</div>
+        </div>
+        
+        <div class="arrow" style="top: 105px; left: 800px;">→</div>
+        <div class="arrow-label" style="top: 75px; left: 800px;">Analysis<br>Results</div>
+        
+        <div class="node blue-node backend">
+            <div class="node-title">Backend</div>
+            <div class="node-subtitle">FastAPI</div>
+        </div>
+        
+        <div class="arrow" style="top: 105px; right: 280px;">→</div>
+        <div class="arrow-label" style="top: 75px; right: 275px;">Serve<br>Data</div>
+        
+        <div class="node blue-node dashboard">
+            <div class="node-title">Dashboard</div>
+            <div class="node-subtitle">Next.js</div>
+        </div>
+        
+        <!-- Vertical Arrows -->
+        <div class="arrow" style="top: 320px; left: 150px; transform: rotate(90deg);">↓</div>
+        <div class="arrow" style="top: 320px; right: 150px; transform: rotate(90deg);">↓</div>
+        
+        <!-- Bottom Row -->
+        <div class="node green-node database">
+            <div class="node-title">Database</div>
+            <div class="node-subtitle">PostgreSQL</div>
+        </div>
+        
+        <div class="arrow" style="bottom: 105px; left: 280px; transform: rotate(180deg);">→</div>
+        <div class="arrow-label" style="bottom: 75px; left: 280px;">Store &<br>Retrieve</div>
+        
+        <div class="node blue-node api-server">
+            <div class="node-title">API Server</div>
+            <div class="node-subtitle">FastAPI</div>
+        </div>
+        
+        <div class="arrow" style="bottom: 105px; right: 540px; transform: rotate(180deg);">→</div>
+        <div class="arrow-label" style="bottom: 75px; right: 535px;">REST<br>API</div>
+        
+        <div class="node blue-node frontend">
+            <div class="node-title">Frontend</div>
+            <div class="node-subtitle">React</div>
+        </div>
+        
+        <div class="arrow" style="bottom: 105px; right: 280px; transform: rotate(180deg);">→</div>
+        <div class="arrow-label" style="bottom: 75px; right: 275px;">User<br>Actions</div>
+        
+        <div class="node red-node user">
+            <div class="node-title">User</div>
+            <div class="node-subtitle">Browser</div>
+        </div>
+        
+        <!-- Center Info -->
+        <div class="center-info">
+            <div class="center-title">Local Development</div>
+            <div class="center-subtitle">localhost:3005 • localhost:8000</div>
+        </div>
+    </div>
+</body>
+</html>

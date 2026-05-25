@@ -57,41 +57,43 @@ export default function Navbar() {
             </Link>
           </div>
 
-          {/* Navigation Links */}
-          <div className="flex space-x-2">
-            <Link
-              href="/dashboard"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
-                "/dashboard"
-              )}`}
-            >
-              📈 Dashboard
-            </Link>
-            <Link
-              href="/restaurants"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
-                "/restaurants"
-              )}`}
-            >
-              🏪 Restaurants
-            </Link>
-            <Link
-              href="/responses/approve"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
-                "/responses/approve"
-              )}`}
-            >
-              💬 Approve Responses
-            </Link>
-            <Link
-              href="/live-monitor"
-              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
-                "/live-monitor"
-              )}`}
-            >
-              📡 Live Monitor
-            </Link>
-          </div>
+          {/* Navigation Links - Only show when authenticated */}
+          {isAuthenticated && (
+            <div className="flex space-x-2">
+              <Link
+                href="/dashboard"
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
+                  "/dashboard"
+                )}`}
+              >
+                📈 Dashboard
+              </Link>
+              <Link
+                href="/restaurants"
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
+                  "/restaurants"
+                )}`}
+              >
+                🏪 Restaurants
+              </Link>
+              <Link
+                href="/responses/approve"
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
+                  "/responses/approve"
+                )}`}
+              >
+                💬 Approve Responses
+              </Link>
+              <Link
+                href="/live-monitor"
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(
+                  "/live-monitor"
+                )}`}
+              >
+                📡 Live Monitor
+              </Link>
+            </div>
+          )}
 
           {/* User Section */}
           <div className="flex items-center space-x-3">
@@ -110,12 +112,20 @@ export default function Navbar() {
                 </button>
               </>
             ) : (
-              <Link
-                href="/signup"
-                className="px-6 py-2 bg-white text-blue-600 rounded-md text-sm font-bold hover:bg-gray-100 transition-colors shadow-md"
-              >
-                Sign Up
-              </Link>
+              <div className="flex items-center space-x-3">
+                <Link
+                  href="/login"
+                  className="px-6 py-2 text-white rounded-md text-sm font-medium hover:bg-blue-700 transition-colors"
+                >
+                  Login
+                </Link>
+                <Link
+                  href="/signup"
+                  className="px-6 py-2 bg-white text-blue-600 rounded-md text-sm font-bold hover:bg-gray-100 transition-colors shadow-md"
+                >
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
         </div>

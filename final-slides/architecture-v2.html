@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>System Architecture</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #0f172a;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            padding: 80px 120px;
+        }
+        
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 80px;
+            color: #ffffff;
+        }
+        
+        .flow-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 100px;
+        }
+        
+        .node {
+            text-align: center;
+            position: relative;
+        }
+        
+        .node-box {
+            background: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 16px;
+            padding: 40px 50px;
+            min-width: 220px;
+            transition: all 0.3s ease;
+        }
+        
+        .node-box:hover {
+            border-color: #3b82f6;
+            transform: translateY(-5px);
+        }
+        
+        .node-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .node-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+        
+        .node-subtitle {
+            font-size: 20px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        .arrow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 30px;
+        }
+        
+        .arrow {
+            font-size: 56px;
+            color: #3b82f6;
+            font-weight: 900;
+        }
+        
+        .arrow-label {
+            font-size: 16px;
+            color: #94a3b8;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        /* Special styling */
+        .nlp-highlight .node-box {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #1e293b 0%, #064e3b 100%);
+        }
+        
+        .user-highlight .node-box {
+            border-color: #ef4444;
+        }
+        
+        .tech-stack {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+        
+        .tech-item {
+            text-align: center;
+        }
+        
+        .tech-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+        
+        .tech-name {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+        
+        .tech-desc {
+            font-size: 16px;
+            color: #64748b;
+        }
+        
+        .center-label {
+            text-align: center;
+            margin: 40px 0;
+            font-size: 20px;
+            color: #64748b;
+        }
+        
+        .center-label strong {
+            color: #3b82f6;
+            font-size: 28px;
+            font-weight: 900;
+        }
+    </style>
+</head>
+<body>
+    <h1>System Architecture</h1>
+    
+    <!-- Main Flow -->
+    <div class="flow-container">
+        <div class="node">
+            <div class="node-box">
+                <div class="node-icon">🌐</div>
+                <div class="node-title">Google Places</div>
+                <div class="node-subtitle">Review Source</div>
+            </div>
+        </div>
+        
+        <div class="arrow-container">
+            <div class="arrow">→</div>
+            <div class="arrow-label">Fetch Reviews</div>
+        </div>
+        
+        <div class="node nlp-highlight">
+            <div class="node-box">
+                <div class="node-icon">🧠</div>
+                <div class="node-title">NLP Engine</div>
+                <div class="node-subtitle">TextBlob</div>
+            </div>
+        </div>
+        
+        <div class="arrow-container">
+            <div class="arrow">→</div>
+            <div class="arrow-label">Analysis</div>
+        </div>
+        
+        <div class="node">
+            <div class="node-box">
+                <div class="node-icon">⚡</div>
+                <div class="node-title">Backend API</div>
+                <div class="node-subtitle">FastAPI</div>
+            </div>
+        </div>
+        
+        <div class="arrow-container">
+            <div class="arrow">→</div>
+            <div class="arrow-label">Serve Data</div>
+        </div>
+        
+        <div class="node">
+            <div class="node-box">
+                <div class="node-icon">💻</div>
+                <div class="node-title">Dashboard</div>
+                <div class="node-subtitle">Next.js</div>
+            </div>
+        </div>
+        
+        <div class="arrow-container">
+            <div class="arrow">→</div>
+            <div class="arrow-label">Display</div>
+        </div>
+        
+        <div class="node user-highlight">
+            <div class="node-box">
+                <div class="node-icon">👤</div>
+                <div class="node-title">User</div>
+                <div class="node-subtitle">Browser</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="center-label">
+        <strong>Local Development</strong> • localhost:3005 (Frontend) • localhost:8000 (Backend)
+    </div>
+    
+    <!-- Tech Stack -->
+    <div class="tech-stack">
+        <div class="tech-item">
+            <div class="tech-icon">🗄️</div>
+            <div class="tech-name">PostgreSQL</div>
+            <div class="tech-desc">Database</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">🐍</div>
+            <div class="tech-name">Python</div>
+            <div class="tech-desc">Backend Language</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">📝</div>
+            <div class="tech-name">TextBlob</div>
+            <div class="tech-desc">NLP Library</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">⚛️</div>
+            <div class="tech-name">React</div>
+            <div class="tech-desc">Frontend Framework</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">🎨</div>
+            <div class="tech-name">Tailwind</div>
+            <div class="tech-desc">Styling</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>RevuIQ - Slide 3 - Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #F9FAFB;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 80px 100px;
+        }
+        h1 {
+            font-size: 72px;
+            font-weight: 900;
+            color: #1F2937;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        .section {
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #3B82F6;
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 32px;
+        }
+        th {
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            color: white;
+            padding: 25px;
+            text-align: left;
+            font-weight: 700;
+        }
+        td {
+            padding: 25px;
+            border-bottom: 2px solid #E5E7EB;
+            color: #374151;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .accuracy {
+            font-weight: 700;
+            color: #10B981;
+            font-size: 36px;
+        }
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            font-size: 28px;
+            color: #374151;
+        }
+        .tech-item {
+            display: flex;
+            align-items: center;
+        }
+        .tech-label {
+            font-weight: 700;
+            color: #8B5CF6;
+            min-width: 180px;
+        }
+        .performance {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Technology & Architecture</h1>
+    
+    <div class="section">
+        <h2>9 AI Models Working Together</h2>
+        <table>
+            <tr>
+                <th>Model</th>
+                <th>Purpose</th>
+                <th>Accuracy</th>
+            </tr>
+            <tr>
+                <td><strong>RoBERTa</strong></td>
+                <td>Sentiment Analysis</td>
+                <td class="accuracy">92%</td>
+            </tr>
+            <tr>
+                <td><strong>GoEmotions</strong></td>
+                <td>28 Emotion Types</td>
+                <td class="accuracy">88%</td>
+            </tr>
+            <tr>
+                <td><strong>T5</strong></td>
+                <td>Response Generation</td>
+                <td class="accuracy">-</td>
+            </tr>
+            <tr>
+                <td><strong>BERT-NER</strong></td>
+                <td>Aspect Extraction</td>
+                <td class="accuracy">85%</td>
+            </tr>
+            <tr>
+                <td><strong>LSTM</strong></td>
+                <td>Trend Prediction</td>
+                <td class="accuracy">85%</td>
+            </tr>
+            <tr>
+                <td><strong>GAN</strong></td>
+                <td>Fake Review Detection</td>
+                <td class="accuracy">91%</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="section">
+        <h2>Tech Stack</h2>
+        <div class="tech-stack">
+            <div class="tech-item">
+                <span class="tech-label">Frontend:</span>
+                <span>Next.js + Tailwind CSS</span>
+            </div>
+            <div class="tech-item">
+                <span class="tech-label">Backend:</span>
+                <span>FastAPI + LangChain</span>
+            </div>
+            <div class="tech-item">
+                <span class="tech-label">Database:</span>
+                <span>PostgreSQL (Supabase)</span>
+            </div>
+            <div class="tech-item">
+                <span class="tech-label">AI/ML:</span>
+                <span>Hugging Face Transformers</span>
+            </div>
+        </div>
+        <div class="performance">
+            Performance: 300ms analysis time | 20+ reviews/second
+        </div>
+    </div>
+</body>
+</html>

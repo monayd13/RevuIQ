@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>RevuIQ - Slide 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #F9FAFB;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 80px 100px;
+        }
+        h1 {
+            font-size: 72px;
+            font-weight: 900;
+            color: #1F2937;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            height: calc(100% - 200px);
+        }
+        .column {
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #3B82F6;
+            margin-bottom: 30px;
+        }
+        .feature {
+            margin-bottom: 35px;
+        }
+        .feature-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1F2937;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .feature-icon {
+            font-size: 36px;
+            margin-right: 15px;
+        }
+        .feature-desc {
+            font-size: 24px;
+            color: #6B7280;
+            margin-left: 51px;
+            line-height: 1.5;
+        }
+        .demo-box {
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 25px;
+        }
+        .demo-label {
+            font-size: 24px;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        .demo-value {
+            font-size: 28px;
+            font-weight: 600;
+            line-height: 1.6;
+        }
+        .demo-response {
+            background: #F3F4F6;
+            color: #1F2937;
+            padding: 30px;
+            border-radius: 12px;
+            font-size: 26px;
+            line-height: 1.6;
+            font-style: italic;
+        }
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .button {
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 22px;
+            font-weight: 600;
+            border: 2px solid #3B82F6;
+            color: #3B82F6;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Key Features & Demo</h1>
+    
+    <div class="columns">
+        <div class="column">
+            <h2>Core Features</h2>
+            
+            <div class="feature">
+                <div class="feature-title">
+                    <span class="feature-icon">🎯</span>
+                    Real-Time Live Monitor
+                </div>
+                <div class="feature-desc">
+                    WebSocket-powered live feed with instant AI insights
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-title">
+                    <span class="feature-icon">🧠</span>
+                    Advanced NLP Pipeline
+                </div>
+                <div class="feature-desc">
+                    Sentiment, 28 emotions, aspect extraction
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-title">
+                    <span class="feature-icon">🤖</span>
+                    Smart Response Generation
+                </div>
+                <div class="feature-desc">
+                    Context-aware AI with human approval
+                </div>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-title">
+                    <span class="feature-icon">📊</span>
+                    Predictive Analytics
+                </div>
+                <div class="feature-desc">
+                    7-day forecasting, 91% fake detection
+                </div>
+            </div>
+        </div>
+        
+        <div class="column">
+            <h2>Demo Example</h2>
+            
+            <div class="demo-box" style="margin-bottom: 20px;">
+                <div class="demo-label">Review:</div>
+                <div class="demo-value">"Service is always so great here! Staff is amazing."</div>
+            </div>
+            
+            <div class="demo-box">
+                <div class="demo-label">AI Analysis (300ms):</div>
+                <div class="demo-value">
+                    ✓ Sentiment: POSITIVE (92%)<br>
+                    ✓ Emotions: Joy (0.85), Gratitude (0.72)<br>
+                    ✓ Aspects: Service (POSITIVE)
+                </div>
+            </div>
+            
+            <div class="demo-response">
+                "Thank you for your wonderful feedback! We're thrilled to hear our staff made your visit special. Looking forward to welcoming you back soon! ✨"
+            </div>
+            
+            <div class="buttons">
+                <div class="button">✓ Approve</div>
+                <div class="button">✏️ Edit</div>
+                <div class="button">🔄 Regenerate</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

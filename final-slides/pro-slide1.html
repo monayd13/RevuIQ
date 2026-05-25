@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>RevuIQ - Title</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #0f172a;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* Subtle grid pattern */
+        .grid-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        /* Accent shapes */
+        .accent {
+            position: absolute;
+            background: #3b82f6;
+            opacity: 0.15;
+            filter: blur(100px);
+        }
+        .accent1 {
+            width: 500px;
+            height: 500px;
+            top: -100px;
+            right: 200px;
+        }
+        .accent2 {
+            width: 400px;
+            height: 400px;
+            bottom: -50px;
+            left: 100px;
+            background: #06b6d4;
+        }
+        
+        /* Content */
+        .content {
+            position: relative;
+            z-index: 10;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 120px;
+        }
+        
+        .label {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #3b82f6;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 180px;
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 40px;
+            color: #ffffff;
+        }
+        
+        .subtitle {
+            font-size: 48px;
+            font-weight: 400;
+            color: #94a3b8;
+            margin-bottom: 60px;
+            max-width: 1200px;
+        }
+        
+        .tech-stack {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tech-badge {
+            padding: 12px 30px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+        
+        .footer {
+            position: absolute;
+            bottom: 60px;
+            left: 120px;
+            font-size: 18px;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+    <div class="accent accent1"></div>
+    <div class="accent accent2"></div>
+    
+    <div class="content">
+        <div class="label">NLP Project 2025</div>
+        <h1>RevuIQ</h1>
+        <div class="subtitle">
+            AI-powered review management with real-time sentiment analysis
+        </div>
+        <div class="tech-stack">
+            <div class="tech-badge">TextBlob NLP</div>
+            <div class="tech-badge">Naive Bayes</div>
+            <div class="tech-badge">Next.js</div>
+            <div class="tech-badge">FastAPI</div>
+            <div class="tech-badge">PostgreSQL</div>
+        </div>
+    </div>
+    
+    <div class="footer">December 2025 • Natural Language Processing</div>
+</body>
+</html>

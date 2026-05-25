@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>Problem & Solution</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #0A0E27;
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            padding: 100px 120px;
+        }
+        
+        h1 {
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 60px;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card.problem::before {
+            background: linear-gradient(90deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        h2 {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 40px;
+        }
+        
+        .problem h2 {
+            color: #f093fb;
+        }
+        
+        .solution h2 {
+            color: #667eea;
+        }
+        
+        .item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 30px;
+            font-size: 28px;
+            line-height: 1.6;
+            color: #cbd5e0;
+        }
+        
+        .number {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 24px;
+            margin-right: 25px;
+            flex-shrink: 0;
+        }
+        
+        .problem .number {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .highlight {
+            margin-top: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            text-align: center;
+            font-size: 32px;
+            font-weight: 900;
+        }
+    </style>
+</head>
+<body>
+    <h1>The Challenge & Our Solution</h1>
+    
+    <div class="grid">
+        <div class="card problem">
+            <h2>The Problem</h2>
+            <div class="item">
+                <div class="number">1</div>
+                <div>Reviews scattered across multiple platforms</div>
+            </div>
+            <div class="item">
+                <div class="number">2</div>
+                <div>Average 3-5 days response time</div>
+            </div>
+            <div class="item">
+                <div class="number">3</div>
+                <div>No automated sentiment analysis</div>
+            </div>
+            <div class="item">
+                <div class="number">4</div>
+                <div>Manual processing wastes time & money</div>
+            </div>
+        </div>
+        
+        <div class="card solution">
+            <h2>Our Solution</h2>
+            <div class="item">
+                <div class="number">1</div>
+                <div>Google Places API integration</div>
+            </div>
+            <div class="item">
+                <div class="number">2</div>
+                <div>NLP-powered sentiment analysis</div>
+            </div>
+            <div class="item">
+                <div class="number">3</div>
+                <div>Real-time monitoring dashboard</div>
+            </div>
+            <div class="item">
+                <div class="number">4</div>
+                <div>Automated response generation</div>
+            </div>
+            <div class="highlight">
+                $10B+ Market Opportunity
+            </div>
+        </div>
+    </div>
+</body>
+</html>

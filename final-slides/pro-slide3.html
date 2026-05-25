@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>NLP Technology</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #0f172a;
+            font-family: 'Inter', sans-serif;
+            color: white;
+            padding: 100px 120px;
+        }
+        
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            color: #ffffff;
+        }
+        
+        .main-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 60px;
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            font-size: 38px;
+            font-weight: 900;
+            color: #3b82f6;
+            margin-bottom: 40px;
+        }
+        
+        .nlp-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
+        .nlp-item {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 35px;
+        }
+        
+        .nlp-title {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+        
+        .nlp-method {
+            font-size: 22px;
+            color: #3b82f6;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .nlp-desc {
+            font-size: 20px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        .tech-card {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .tech-label {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .tech-value {
+            font-size: 24px;
+            color: white;
+            font-weight: 900;
+        }
+        
+        .performance {
+            margin-top: 30px;
+            padding: 25px;
+            background: #3b82f6;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <h1>NLP Technology Stack</h1>
+    
+    <div class="main-card">
+        <h2>Natural Language Processing Pipeline</h2>
+        <div class="nlp-grid">
+            <div class="nlp-item">
+                <div class="nlp-title">Sentiment Analysis</div>
+                <div class="nlp-method">Naive Bayes Classifier</div>
+                <div class="nlp-desc">Trained on movie reviews, classifies text as positive/neutral/negative</div>
+            </div>
+            
+            <div class="nlp-item">
+                <div class="nlp-title">Emotion Detection</div>
+                <div class="nlp-method">Keyword + Sentiment</div>
+                <div class="nlp-desc">Detects joy, anger, gratitude, disappointment from text</div>
+            </div>
+            
+            <div class="nlp-item">
+                <div class="nlp-title">Aspect Extraction</div>
+                <div class="nlp-method">Noun Phrase Chunking</div>
+                <div class="nlp-desc">Identifies food, service, ambiance aspects using POS tagging</div>
+            </div>
+            
+            <div class="nlp-item">
+                <div class="nlp-title">Response Generation</div>
+                <div class="nlp-method">Context-Aware Templates</div>
+                <div class="nlp-desc">Generates personalized responses based on sentiment & aspects</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-card">
+        <h2>Technology Stack</h2>
+        <div class="tech-stack">
+            <div class="tech-card">
+                <div class="tech-label">NLP Engine</div>
+                <div class="tech-value">TextBlob</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-label">Frontend</div>
+                <div class="tech-value">Next.js</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-label">Backend</div>
+                <div class="tech-value">FastAPI</div>
+            </div>
+            <div class="tech-card">
+                <div class="tech-label">Database</div>
+                <div class="tech-value">PostgreSQL</div>
+            </div>
+        </div>
+        <div class="performance">
+            ⚡ ~1 second per review • Real-time analysis
+        </div>
+    </div>
+</body>
+</html>

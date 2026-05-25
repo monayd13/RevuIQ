@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>RevuIQ - Slide 6</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #F9FAFB;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding: 80px 100px;
+        }
+        h1 {
+            font-size: 72px;
+            font-weight: 900;
+            color: #1F2937;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            height: calc(100% - 200px);
+        }
+        .column {
+            background: white;
+            border-radius: 24px;
+            padding: 50px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 48px;
+            font-weight: 800;
+            color: #3B82F6;
+            margin-bottom: 30px;
+        }
+        .status-item {
+            font-size: 32px;
+            margin-bottom: 25px;
+            color: #374151;
+            display: flex;
+            align-items: center;
+        }
+        .status-icon {
+            font-size: 40px;
+            margin-right: 20px;
+        }
+        .roadmap-item {
+            background: linear-gradient(135deg, #3B82F6 0%, #8B5CF6 100%);
+            color: white;
+            padding: 25px 35px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 30px;
+            font-weight: 600;
+        }
+        .roadmap-quarter {
+            font-weight: 900;
+            margin-right: 15px;
+        }
+        .market-stat {
+            background: #F3F4F6;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 28px;
+            color: #374151;
+        }
+        .market-value {
+            font-size: 42px;
+            font-weight: 900;
+            color: #10B981;
+            margin-bottom: 5px;
+        }
+        .cta-box {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            text-align: center;
+        }
+        .cta-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 25px;
+        }
+        .cta-link {
+            font-size: 32px;
+            margin-bottom: 15px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .cta-tagline {
+            font-size: 36px;
+            font-weight: 700;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Roadmap & Call to Action</h1>
+    
+    <div class="columns">
+        <div class="column">
+            <h2>Current Status</h2>
+            <div class="status-item">
+                <span class="status-icon">✅</span>
+                <span>9 AI models integrated</span>
+            </div>
+            <div class="status-item">
+                <span class="status-icon">✅</span>
+                <span>Live monitoring dashboard</span>
+            </div>
+            <div class="status-item">
+                <span class="status-icon">✅</span>
+                <span>Google Places connector</span>
+            </div>
+            <div class="status-item">
+                <span class="status-icon">✅</span>
+                <span>15 real reviews processed</span>
+            </div>
+            
+            <h2 style="margin-top: 50px;">Next Steps</h2>
+            <div class="roadmap-item">
+                <span class="roadmap-quarter">Q1 2026:</span>
+                Multi-platform integration
+            </div>
+            <div class="roadmap-item">
+                <span class="roadmap-quarter">Q2 2026:</span>
+                Mobile app launch
+            </div>
+            <div class="roadmap-item">
+                <span class="roadmap-quarter">Q3 2026:</span>
+                Automated posting + API
+            </div>
+            <div class="roadmap-item">
+                <span class="roadmap-quarter">Q4 2026:</span>
+                Enterprise features
+            </div>
+        </div>
+        
+        <div class="column">
+            <h2>Target Market</h2>
+            <div class="market-stat">
+                <div class="market-value">4.5M</div>
+                <div>Restaurants in US</div>
+            </div>
+            <div class="market-stat">
+                <div class="market-value">$3.5B</div>
+                <div>Serviceable Market</div>
+            </div>
+            <div class="market-stat">
+                <div class="market-value">$175M</div>
+                <div>Year 1 Target (50K businesses)</div>
+            </div>
+            
+            <div class="cta-box">
+                <div class="cta-title">View Demo</div>
+                <div class="cta-link">http://localhost:3005</div>
+                <div class="cta-link">github.com/monayd13/RevuIQ</div>
+                <div class="cta-tagline">
+                    Built with 9 AI models<br>Ready for deployment!
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

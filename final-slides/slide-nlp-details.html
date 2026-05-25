@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>NLP Deep Dive</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #ffffff;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            padding: 100px 120px;
+        }
+        
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 80px;
+            color: #1e40af;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+        }
+        
+        .section {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 50px;
+        }
+        
+        h2 {
+            font-size: 36px;
+            font-weight: 900;
+            color: #3b82f6;
+            margin-bottom: 30px;
+        }
+        
+        .technique {
+            margin-bottom: 35px;
+        }
+        
+        .technique-name {
+            font-size: 26px;
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .technique-desc {
+            font-size: 20px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+        
+        .technique-example {
+            font-size: 18px;
+            color: #3b82f6;
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        .highlight-box {
+            background: #eff6ff;
+            border: 2px solid #3b82f6;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+        
+        .highlight-title {
+            font-size: 22px;
+            font-weight: 900;
+            color: #1e40af;
+            margin-bottom: 15px;
+        }
+        
+        .highlight-text {
+            font-size: 20px;
+            color: #475569;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <h1>NLP Techniques Deep Dive</h1>
+    
+    <div class="content">
+        <div class="section">
+            <h2>Core NLP Methods</h2>
+            
+            <div class="technique">
+                <div class="technique-name">1. Tokenization</div>
+                <div class="technique-desc">Breaking text into individual words and sentences for analysis</div>
+                <div class="technique-example">Example: "Great food!" → ["Great", "food", "!"]</div>
+            </div>
+            
+            <div class="technique">
+                <div class="technique-name">2. POS Tagging</div>
+                <div class="technique-desc">Identifying parts of speech (nouns, verbs, adjectives)</div>
+                <div class="technique-example">Example: "food" → Noun, "great" → Adjective</div>
+            </div>
+            
+            <div class="technique">
+                <div class="technique-name">3. Noun Phrase Extraction</div>
+                <div class="technique-desc">Finding key topics and aspects mentioned in reviews</div>
+                <div class="technique-example">Example: "the food", "excellent service"</div>
+            </div>
+            
+            <div class="technique">
+                <div class="technique-name">4. Polarity Scoring</div>
+                <div class="technique-desc">Measuring sentiment on a scale from -1 (negative) to +1 (positive)</div>
+                <div class="technique-example">Example: "Amazing!" → +0.9, "Terrible" → -0.8</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Machine Learning</h2>
+            
+            <div class="technique">
+                <div class="technique-name">Naive Bayes Classifier</div>
+                <div class="technique-desc">Probabilistic algorithm trained on movie review corpus</div>
+                <div class="technique-example">Trained on 10,000+ labeled reviews</div>
+            </div>
+            
+            <div class="technique">
+                <div class="technique-name">Feature Extraction</div>
+                <div class="technique-desc">Converting text into numerical features for classification</div>
+                <div class="technique-example">Word frequency, n-grams, sentiment words</div>
+            </div>
+            
+            <div class="technique">
+                <div class="technique-name">Pattern Recognition</div>
+                <div class="technique-desc">Identifying common phrases and emotional keywords</div>
+                <div class="technique-example">"love", "hate", "best", "worst", "amazing"</div>
+            </div>
+            
+            <div class="highlight-box">
+                <div class="highlight-title">Why TextBlob?</div>
+                <div class="highlight-text">
+                    Built on NLTK, pre-trained models, fast processing (~1 second), 
+                    reliable for production, no GPU required
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

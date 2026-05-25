@@ -6,15 +6,16 @@ import { CheckCircle, XCircle, Clock, AlertCircle, ThumbsUp, ThumbsDown } from "
 
 interface Review {
   id: number;
-  business_id: number;
+  platform: string;
   author: string;
   rating: number;
   text: string;
-  review_date: string;
+  date: string;
   sentiment: string;
   sentiment_score: number;
-  primary_emotion: string;
-  created_at: string;
+  emotions: Record<string, number>;
+  aspects: string[];
+  ai_response: string;
   approval_status: string;
 }
 
@@ -38,7 +39,7 @@ export default function ReviewApprovalPage() {
 
   const fetchPendingReviews = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/reviews/pending");
+      const response = await fetch("/api/reviews/pending");
       const data = await response.json();
       if (data.success) {
         setReviews(data.reviews);
@@ -52,7 +53,7 @@ export default function ReviewApprovalPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/reviews/stats");
+      const response = await fetch("/api/reviews/stats");
       const data = await response.json();
       if (data.success) {
         setStats(data.stats);
@@ -65,7 +66,7 @@ export default function ReviewApprovalPage() {
   const handleApproval = async (reviewId: number, isGenuine: boolean, notes: string = "") => {
     setApproving(reviewId);
     try {
-      const response = await fetch(`http://localhost:8000/api/reviews/${reviewId}/approve`, {
+      const response = await fetch(`/api/reviews/${reviewId}/approve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -220,21 +221,68 @@ export default function ReviewApprovalPage() {
                     <div className="flex items-center gap-3 mb-2">
                       <h3 className="text-xl font-bold text-gray-900">{review.author}</h3>
                       <span className={`px-3 py-1 rounded-full text-sm font-medium ${getSentimentColor(review.sentiment)}`}>
-                        {review.sentiment}
+                        {review.sentiment?.toUpperCase() || 'NEUTRAL'}
                       </span>
-                      <span className="text-2xl">{getEmotionEmoji(review.primary_emotion)}</span>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${
+                        (review.sentiment_score || 0) > 0.1 ? 'bg-green-50 text-green-700' :
+                        (review.sentiment_score || 0) < -0.1 ? 'bg-red-50 text-red-700' :
+                        'bg-gray-50 text-gray-700'
+                      }`}>
+                        {(review.sentiment_score || 0) > 0 ? '+' : ''}{(review.sentiment_score || 0).toFixed(2)}
+                        <span className="ml-1 text-xs opacity-75">
+                          ({Math.abs(review.sentiment_score || 0) > 0.5 ? 'Strong' : 'Moderate'})
+                        </span>
+                      </span>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-gray-500">
                       <span>⭐ {review.rating}/5</span>
-                      <span>📅 {new Date(review.review_date).toLocaleDateString()}</span>
-                      <span className="capitalize">{review.primary_emotion}</span>
+                      <span>📅 {new Date(review.date).toLocaleDateString()}</span>
+                      <span className="px-2 py-1 bg-gray-100 rounded text-xs">{review.platform}</span>
                     </div>
                   </div>
                 </div>
 
-                <p className="text-gray-700 mb-6 leading-relaxed">{review.text}</p>
+                <p className="text-gray-700 mb-4 leading-relaxed">{review.text}</p>
 
-                <div className="flex gap-4">
+                {/* NLP Analysis */}
+                <div className="grid grid-cols-2 gap-4 mb-4 p-4 bg-gray-50 rounded-lg">
+                  {/* Emotions */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-700 mb-2">🎭 Emotions</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {review.emotions && Object.entries(review.emotions).map(([emotion, score]) => (
+                        <span key={emotion} className="px-2 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">
+                          {emotion}: {typeof score === 'number' ? score.toFixed(2) : score}
+                        </span>
+                      ))}
+                      {(!review.emotions || Object.keys(review.emotions).length === 0) && (
+                        <span className="text-gray-400 text-xs">No emotions detected</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Aspects */}
+                  <div>
+                    <h4 className="text-sm font-semibold text-gray-700 mb-2">🏷️ Aspects</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {review.aspects && review.aspects.map((aspect, idx) => {
+                        const aspectName = typeof aspect === 'string' 
+                          ? aspect 
+                          : (aspect as any)?.aspect || JSON.stringify(aspect);
+                        return (
+                          <span key={idx} className="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs capitalize">
+                            {aspectName}
+                          </span>
+                        );
+                      })}
+                      {(!review.aspects || review.aspects.length === 0) && (
+                        <span className="text-gray-400 text-xs">No aspects detected</span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 mt-4">
                   <button
                     onClick={() => handleApproval(review.id, true, "Verified as genuine review")}
                     disabled={approving === review.id}

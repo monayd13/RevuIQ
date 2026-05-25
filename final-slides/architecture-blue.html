@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>System Architecture</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #ffffff;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            padding: 80px 120px;
+        }
+        
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 100px;
+            color: #1e40af;
+        }
+        
+        /* Top Flow */
+        .top-flow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 120px;
+        }
+        
+        .box {
+            background: #f8fafc;
+            border: 3px solid #cbd5e0;
+            border-radius: 20px;
+            padding: 50px 45px;
+            text-align: center;
+            min-width: 220px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .box-icon {
+            font-size: 56px;
+            margin-bottom: 20px;
+        }
+        
+        .box-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        
+        .box-subtitle {
+            font-size: 18px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        /* Special highlights */
+        .nlp-box {
+            border-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .user-box {
+            border-color: #3b82f6;
+        }
+        
+        /* Arrows */
+        .arrow {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .arrow-icon {
+            font-size: 48px;
+            color: #3b82f6;
+            font-weight: 900;
+        }
+        
+        .arrow-label {
+            font-size: 15px;
+            color: #64748b;
+            font-weight: 600;
+        }
+        
+        /* Center Label */
+        .center-label {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        
+        .center-title {
+            font-size: 32px;
+            font-weight: 900;
+            color: #3b82f6;
+            margin-bottom: 8px;
+        }
+        
+        .center-subtitle {
+            font-size: 18px;
+            color: #64748b;
+        }
+        
+        /* Bottom Tech Stack */
+        .tech-stack {
+            display: flex;
+            justify-content: center;
+            gap: 80px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 50px;
+        }
+        
+        .tech-item {
+            text-align: center;
+        }
+        
+        .tech-icon {
+            font-size: 64px;
+            margin-bottom: 15px;
+        }
+        
+        .tech-name {
+            font-size: 28px;
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+        
+        .tech-desc {
+            font-size: 16px;
+            color: #64748b;
+        }
+    </style>
+</head>
+<body>
+    <h1>System Architecture</h1>
+    
+    <!-- Top Flow -->
+    <div class="top-flow">
+        <div class="box">
+            <div class="box-icon">🌐</div>
+            <div class="box-title">Google Places</div>
+            <div class="box-subtitle">Review Source</div>
+        </div>
+        
+        <div class="arrow">
+            <div class="arrow-icon">→</div>
+            <div class="arrow-label">Fetch<br>Reviews</div>
+        </div>
+        
+        <div class="box nlp-box">
+            <div class="box-icon">🧠</div>
+            <div class="box-title">NLP Engine</div>
+            <div class="box-subtitle">TextBlob</div>
+        </div>
+        
+        <div class="arrow">
+            <div class="arrow-icon">→</div>
+            <div class="arrow-label">Analysis</div>
+        </div>
+        
+        <div class="box">
+            <div class="box-icon">⚡</div>
+            <div class="box-title">Backend API</div>
+            <div class="box-subtitle">FastAPI</div>
+        </div>
+        
+        <div class="arrow">
+            <div class="arrow-icon">→</div>
+            <div class="arrow-label">Serve<br>Data</div>
+        </div>
+        
+        <div class="box">
+            <div class="box-icon">💻</div>
+            <div class="box-title">Dashboard</div>
+            <div class="box-subtitle">Next.js</div>
+        </div>
+        
+        <div class="arrow">
+            <div class="arrow-icon">→</div>
+            <div class="arrow-label">Display</div>
+        </div>
+        
+        <div class="box user-box">
+            <div class="box-icon">👤</div>
+            <div class="box-title">User</div>
+            <div class="box-subtitle">Browser</div>
+        </div>
+    </div>
+    
+    <!-- Center Label -->
+    <div class="center-label">
+        <div class="center-title">Local Development</div>
+        <div class="center-subtitle">localhost:3005 (Frontend) • localhost:8000 (Backend)</div>
+    </div>
+    
+    <!-- Bottom Tech Stack -->
+    <div class="tech-stack">
+        <div class="tech-item">
+            <div class="tech-icon">🗄️</div>
+            <div class="tech-name">PostgreSQL</div>
+            <div class="tech-desc">Database</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">🐍</div>
+            <div class="tech-name">Python</div>
+            <div class="tech-desc">Backend Language</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">📝</div>
+            <div class="tech-name">TextBlob</div>
+            <div class="tech-desc">NLP Library</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">⚛️</div>
+            <div class="tech-name">React</div>
+            <div class="tech-desc">Frontend Framework</div>
+        </div>
+        
+        <div class="tech-item">
+            <div class="tech-icon">🎨</div>
+            <div class="tech-name">Tailwind</div>
+            <div class="tech-desc">Styling</div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>Live Demo</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            font-family: 'Inter', sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 120px;
+        }
+        
+        h1 {
+            font-size: 120px;
+            font-weight: 900;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 48px;
+            font-weight: 400;
+            margin-bottom: 80px;
+            text-align: center;
+            opacity: 0.9;
+        }
+        
+        .demo-box {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 60px 80px;
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+        
+        .demo-title {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 30px;
+        }
+        
+        .demo-item {
+            font-size: 32px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+        
+        .demo-item strong {
+            font-weight: 900;
+        }
+        
+        .arrow {
+            font-size: 80px;
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Live Demo Time! 🚀</h1>
+    <div class="subtitle">Let's see RevuIQ in action</div>
+    
+    <div class="demo-box">
+        <div class="demo-title">What We'll Show:</div>
+        <div class="demo-item"><strong>1.</strong> Fetch real reviews from Google Places</div>
+        <div class="demo-item"><strong>2.</strong> NLP analysis in real-time</div>
+        <div class="demo-item"><strong>3.</strong> Live dashboard with insights</div>
+        <div class="demo-item"><strong>4.</strong> AI-generated responses</div>
+    </div>
+    
+    <div class="arrow">↓</div>
+    
+    <div style="font-size: 32px; font-weight: 700; opacity: 0.9;">
+        Switch to localhost:3005
+    </div>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>Key Features</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            padding: 100px 120px;
+        }
+        
+        h1 {
+            font-size: 64px;
+            font-weight: 900;
+            margin-bottom: 80px;
+            color: #1e40af;
+            text-align: center;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+        
+        .feature-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 50px;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 56px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-title {
+            font-size: 36px;
+            font-weight: 900;
+            color: #1e293b;
+            margin-bottom: 15px;
+        }
+        
+        .feature-desc {
+            font-size: 22px;
+            color: #64748b;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .feature-tech {
+            display: inline-block;
+            padding: 8px 20px;
+            background: #eff6ff;
+            border: 1px solid #3b82f6;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Key Features & Capabilities</h1>
+    
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <div class="feature-title">Real-Time Analysis</div>
+            <div class="feature-desc">
+                Instant sentiment, emotion, and aspect extraction from customer reviews with ~1 second processing time
+            </div>
+            <span class="feature-tech">TextBlob NLP</span>
+            <span class="feature-tech">FastAPI</span>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <div class="feature-title">Aspect Extraction</div>
+            <div class="feature-desc">
+                Automatically identifies key topics like food quality, service, ambiance, and pricing from review text
+            </div>
+            <span class="feature-tech">POS Tagging</span>
+            <span class="feature-tech">Noun Phrases</span>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">💬</div>
+            <div class="feature-title">Smart Responses</div>
+            <div class="feature-desc">
+                Context-aware response generation based on sentiment analysis and extracted aspects
+            </div>
+            <span class="feature-tech">Template Engine</span>
+            <span class="feature-tech">Context-Aware</span>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <div class="feature-title">Live Dashboard</div>
+            <div class="feature-desc">
+                Interactive monitoring interface with real-time updates, charts, and analytics for business insights
+            </div>
+            <span class="feature-tech">Next.js</span>
+            <span class="feature-tech">React</span>
+            <span class="feature-tech">Tailwind</span>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🗄️</div>
+            <div class="feature-title">Data Persistence</div>
+            <div class="feature-desc">
+                Secure storage of reviews, analysis results, and user data with PostgreSQL database
+            </div>
+            <span class="feature-tech">PostgreSQL</span>
+            <span class="feature-tech">Supabase</span>
+        </div>
+        
+        <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <div class="feature-title">API Integration</div>
+            <div class="feature-desc">
+                Seamless connection to Google Places API for fetching real customer reviews from businesses
+            </div>
+            <span class="feature-tech">Google Places</span>
+            <span class="feature-tech">REST API</span>
+        </div>
+    </div>
+</body>
+</html>

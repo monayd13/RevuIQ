@@ -32,7 +32,7 @@ export default function ResponseApprovalPage() {
 
   const fetchPendingResponses = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/responses/pending");
+      const response = await fetch("/api/responses/pending");
       const data = await response.json();
       if (data.success) {
         setReviews(data.reviews);
@@ -52,7 +52,7 @@ export default function ResponseApprovalPage() {
   const handleApprove = async (reviewId: number, useEdited: boolean = false) => {
     setApproving(reviewId);
     try {
-      const response = await fetch(`http://localhost:8000/api/responses/${reviewId}/approve`, {
+      const response = await fetch(`/api/responses/${reviewId}/approve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -79,7 +79,7 @@ export default function ResponseApprovalPage() {
   const handleReject = async (reviewId: number) => {
     setApproving(reviewId);
     try {
-      const response = await fetch(`http://localhost:8000/api/responses/${reviewId}/approve`, {
+      const response = await fetch(`/api/responses/${reviewId}/approve`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

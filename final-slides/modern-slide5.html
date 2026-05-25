@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, initial-scale=1.0">
+    <title>Results</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1920px;
+            height: 1080px;
+            background: #0A0E27;
+            font-family: 'Space Grotesk', sans-serif;
+            color: white;
+            padding: 100px 120px;
+        }
+        
+        h1 {
+            font-size: 72px;
+            font-weight: 900;
+            margin-bottom: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 50px;
+            text-align: center;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea 0%, #f093fb 100%);
+        }
+        
+        .stat-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-value {
+            font-size: 96px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+        }
+        
+        .stat-label {
+            font-size: 24px;
+            color: #a0aec0;
+            line-height: 1.4;
+        }
+        
+        .features-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 60px;
+            backdrop-filter: blur(20px);
+        }
+        
+        h2 {
+            font-size: 48px;
+            font-weight: 900;
+            color: #667eea;
+            margin-bottom: 40px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+        }
+        
+        .feature-item {
+            background: rgba(102, 126, 234, 0.05);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            font-size: 28px;
+            color: #cbd5e0;
+            transition: all 0.3s ease;
+        }
+        
+        .feature-item:hover {
+            border-color: #667eea;
+            transform: translateX(10px);
+        }
+        
+        .check {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .highlight-banner {
+            margin-top: 40px;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            text-align: center;
+            font-size: 42px;
+            font-weight: 900;
+        }
+    </style>
+</head>
+<body>
+    <h1>Results & Achievements</h1>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">📊</div>
+            <div class="stat-value">15</div>
+            <div class="stat-label">Real Reviews<br>Processed</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">⚡</div>
+            <div class="stat-value">~1s</div>
+            <div class="stat-label">NLP Analysis<br>Time</div>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-icon">🎯</div>
+            <div class="stat-value">100%</div>
+            <div class="stat-label">Automated<br>Analysis</div>
+        </div>
+    </div>
+    
+    <div class="features-section">
+        <h2>Technical Features Implemented</h2>
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="check">✓</div>
+                <span>TextBlob NLP (Naive Bayes)</span>
+            </div>
+            <div class="feature-item">
+                <div class="check">✓</div>
+                <span>Google Places API Integration</span>
+            </div>
+            <div class="feature-item">
+                <div class="check">✓</div>
+                <span>Real-time Dashboard</span>
+            </div>
+            <div class="feature-item">
+                <div class="check">✓</div>
+                <span>PostgreSQL Database</span>
+            </div>
+            <div class="feature-item">
+                <div class="check">✓</div>
+                <span>Sentiment + Emotion Detection</span>
+            </div>
+            <div class="feature-item">
+                <div class="check">✓</div>
+                <span>Aspect Extraction (POS Tagging)</span>
+            </div>
+        </div>
+        <div class="highlight-banner">
+            Full-Stack NLP Application with Real Data
+        </div>
+    </div>
+</body>
+</html>
