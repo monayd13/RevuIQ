@@ -4,8 +4,7 @@ import { motion } from 'framer-motion';
 import { Mail, Lock, Sparkles, ArrowRight } from 'lucide-react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { setAuth } from '@/lib/auth';
-import { API_BASE_URL } from '@/lib/api-config';
+import { loginWithCredentials } from '@/lib/auth';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,35 +18,18 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setError(data.detail || 'Invalid email or password');
-        return;
-      }
-      setAuth(data.access_token, {
-        name: data.user.full_name,
-        email: data.user.email,
-        role: data.user.role,
-        business_id: data.user.business_id,
-      });
-      router.push('/dashboard');
-    } catch {
-      setError('Unable to connect to server. Please try again.');
+      await loginWithCredentials(email, password);
+      window.location.href = '/dashboard';
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Invalid email or password');
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleLogin = () => {
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '276713330167-0gvst3ijhaero31e8s83umjvupbd953i.apps.googleusercontent.com';
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
     const redirectUri = process.env.NEXT_PUBLIC_GOOGLE_REDIRECT_URI || `${window.location.origin}/auth/callback`;
-    // Debug: log exact redirect URI being sent
-    console.log('Google OAuth redirect_uri:', redirectUri);
     const scope = 'email profile';
 
     if (!clientId) {
@@ -61,13 +43,12 @@ export default function LoginPage() {
       `response_type=token&` +
       `scope=${encodeURIComponent(scope)}&` +
       `prompt=select_account`;
-    
+
     window.location.href = googleAuthUrl;
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
-      {/* Background Decoration */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-400/20 rounded-full filter blur-3xl"></div>
         <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-purple-400/20 rounded-full filter blur-3xl"></div>
@@ -79,7 +60,6 @@ export default function LoginPage() {
         transition={{ duration: 0.5 }}
         className="relative w-full max-w-md"
       >
-        {/* Logo Section */}
         <div className="text-center mb-8">
           <motion.div
             initial={{ scale: 0 }}
@@ -93,7 +73,6 @@ export default function LoginPage() {
           <p className="text-gray-600">AI-Powered Review Management</p>
         </div>
 
-        {/* Login Card */}
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -113,87 +92,39 @@ export default function LoginPage() {
           )}
 
           <form onSubmit={handleLogin} className="space-y-5">
-            {/* Email Input */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400"
-                  required
-                />
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400" required />
               </div>
             </div>
-
-            {/* Password Input */}
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Password
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400"
-                  required
-                />
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all text-gray-900 placeholder:text-gray-400" required />
               </div>
             </div>
-
-            {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between text-sm">
               <label className="flex items-center space-x-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500"
-                />
+                <input type="checkbox" className="w-4 h-4 text-blue-500 border-gray-300 rounded focus:ring-blue-500" />
                 <span className="text-gray-600">Remember me</span>
               </label>
-              <a href="/forgot-password" className="text-blue-600 hover:text-blue-700 font-medium">
-                Forgot password?
-              </a>
+              <a href="/forgot-password" className="text-blue-600 hover:text-blue-700 font-medium">Forgot password?</a>
             </div>
-
-            {/* Login Button */}
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              type="submit"
-              disabled={loading}
-              className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-60"
-            >
+            <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} type="submit" disabled={loading} className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl shadow-lg shadow-blue-500/50 hover:shadow-xl hover:shadow-blue-500/60 transition-all duration-300 flex items-center justify-center space-x-2 disabled:opacity-60">
               <span>{loading ? 'Signing in...' : 'Sign in'}</span>
               {!loading && <ArrowRight className="w-5 h-5" />}
             </motion.button>
           </form>
 
-          {/* Divider */}
           <div className="relative my-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-white text-gray-500">Or continue with</span>
-            </div>
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-200"></div></div>
+            <div className="relative flex justify-center text-sm"><span className="px-4 bg-white text-gray-500">Or continue with</span></div>
           </div>
 
-          {/* Google Login */}
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleGoogleLogin}
-            type="button"
-            className="w-full py-3 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center space-x-2"
-          >
+          <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleGoogleLogin} type="button" className="w-full py-3 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center space-x-2">
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
@@ -203,21 +134,13 @@ export default function LoginPage() {
             <span className="text-gray-700 font-medium">Continue with Google</span>
           </motion.button>
 
-          {/* Sign Up Link */}
           <p className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{' '}
-            <a href="/signup" className="text-blue-600 hover:text-blue-700 font-semibold">
-              Sign up
-            </a>
+            Don&apos;t have an account? <a href="/signup" className="text-blue-600 hover:text-blue-700 font-semibold">Sign up</a>
           </p>
         </motion.div>
 
-        {/* Footer */}
         <p className="mt-8 text-center text-sm text-gray-500">
-          By signing in, you agree to our{' '}
-          <a href="/terms" className="text-gray-700 hover:text-gray-900">Terms</a>
-          {' '}and{' '}
-          <a href="/privacy" className="text-gray-700 hover:text-gray-900">Privacy Policy</a>
+          By signing in, you agree to our <a href="/terms" className="text-gray-700 hover:text-gray-900">Terms</a> and <a href="/privacy" className="text-gray-700 hover:text-gray-900">Privacy Policy</a>
         </p>
       </motion.div>
     </div>

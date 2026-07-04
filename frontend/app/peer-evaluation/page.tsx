@@ -23,10 +23,6 @@ export default function PeerEvaluationPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const savedEvaluations = localStorage.getItem('revuiq_peer_evaluations');
-    if (savedEvaluations) {
-      setEvaluations(JSON.parse(savedEvaluations) as Evaluation[]);
-    }
     setIsLoading(false);
   }, []);
 
@@ -44,7 +40,6 @@ export default function PeerEvaluationPage() {
     };
     const updatedEvaluations = [normalizedEvaluation, ...evaluations];
     setEvaluations(updatedEvaluations);
-    localStorage.setItem('revuiq_peer_evaluations', JSON.stringify(updatedEvaluations));
     setActiveTab('my-evaluations');
   };
 

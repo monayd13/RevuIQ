@@ -46,16 +46,7 @@ export default function EvaluationForm({ onSubmit }: EvaluationFormProps) {
   const { toast } = useToast();
 
   useEffect(() => {
-    const users = JSON.parse(localStorage.getItem('revuiq_users') || '[]');
-    const currentUser = JSON.parse(localStorage.getItem('userData') || '{}');
-    const availablePeers = users
-      .filter((user: { email?: string }) => user.email && user.email !== currentUser.email)
-      .map((user: { id?: string; name?: string; email: string }) => ({
-        id: user.id || user.email,
-        name: user.name || user.email,
-        email: user.email,
-      }));
-    setPeers(availablePeers);
+    setPeers([]);
   }, []);
 
   const form = useForm<EvaluationFormValues>({

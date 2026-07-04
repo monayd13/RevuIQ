@@ -2,15 +2,13 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { isAuthenticated } from '@/lib/auth';
 
 export default function RootPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // Check if user is authenticated
-    const isAuth = localStorage.getItem('isAuthenticated') === 'true';
-    
-    if (isAuth) {
+    if (isAuthenticated()) {
       router.push('/dashboard');
     } else {
       router.push('/landing');

@@ -1,19 +1,13 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { LogOut } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { logout } from '@/lib/auth';
 
 export default function LogoutButton({ className = '' }: { className?: string }) {
-  const router = useRouter();
-
-  const handleLogout = () => {
-    // Clear authentication
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userData');
-    
-    // Redirect to login
-    router.push('/login');
+  const handleLogout = async () => {
+    await logout();
+    window.location.href = '/login';
   };
 
   return (
