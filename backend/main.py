@@ -59,15 +59,12 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "http://localhost:3005",
-        "https://revuiq.vercel.app",
-        "https://revuiq-production.up.railway.app",
         os.getenv("FRONTEND_URL", ""),
-        os.getenv("VERCEL_URL", ""),
     ],
-    allow_origin_regex=r"https://.*\.vercel\.app",
+    allow_origin_regex=r"https://revu-iq(-[a-z0-9]+)?\.vercel\.app",
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 # ==================== AUTH ====================
@@ -378,7 +375,7 @@ def process_review_full(text: str, business_name: str, rating: Optional[float] =
 
 class UserSignupRequest(BaseModel):
     email: EmailStr
-    password: str = Field(..., min_length=6)
+    password: str = Field(..., min_length=8)
     full_name: str = Field(..., min_length=1, max_length=200)
     business_name: Optional[str] = Field(None, max_length=200)
 
@@ -716,8 +713,17 @@ async def get_restaurant(restaurant_id: int, db: Session = Depends(get_db) if DB
 
 
 @app.delete("/api/restaurants/{restaurant_id}")
-async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db) if DB_AVAILABLE else None):
+async def delete_restaurant(restaurant_id: int, request: Request, db: Session = Depends(get_db) if DB_AVAILABLE else None):
     _require_db()
+    # Require authentication
+    auth_header = request.headers.get("authorization", "")
+    if not auth_header.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="Authentication required")
+    try:
+        from auth import decode_access_token
+        decode_access_token(auth_header.split(" ")[1])
+    except Exception:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
     try:
         business = db.query(Business).filter(Business.id == restaurant_id).first()
         if not business:
@@ -734,7 +740,7 @@ async def delete_restaurant(restaurant_id: int, db: Session = Depends(get_db) if
     except Exception as e:
         db.rollback()
         logger.error("Error deleting restaurant %d: %s", restaurant_id, e)
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Failed to delete restaurant. Please try again.")
 
 
 # ==================== REVIEW ENDPOINTS ====================

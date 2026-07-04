@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 
 export function getBackendApiUrl() {
-  return process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL || 'https://revuiq-production.up.railway.app';
+  const url = process.env.BACKEND_API_URL || process.env.NEXT_PUBLIC_API_URL;
+  if (!url) {
+    throw new Error('BACKEND_API_URL environment variable is not configured');
+  }
+  return url;
 }
 
 export function missingBackendResponse() {
@@ -15,17 +19,20 @@ export function missingBackendResponse() {
 export async function proxyBackendRequest(path: string, init?: RequestInit) {
   const baseUrl = getBackendApiUrl();
 
-
-  // Forward Authorization header from the incoming request
   const incomingHeaders = await headers();
+  const cookieStore = await cookies();
   const authorization = incomingHeaders.get('authorization');
+  const tokenCookie = cookieStore.get('auth_token')?.value;
 
   const mergedHeaders: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(init?.headers as Record<string, string> || {}),
   };
+
   if (authorization) {
     mergedHeaders['Authorization'] = authorization;
+  } else if (tokenCookie) {
+    mergedHeaders['Authorization'] = `Bearer ${tokenCookie}`;
   }
 
   const response = await fetch(`${baseUrl}${path}`, { ...init, headers: mergedHeaders });

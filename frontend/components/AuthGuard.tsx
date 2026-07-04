@@ -4,43 +4,30 @@ import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { isAuthenticated } from '@/lib/auth';
 
 export default function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const [checked, setChecked] = useState(false);
 
   useEffect(() => {
-    // Check authentication status
-    const checkAuth = () => {
-      const authStatus = localStorage.getItem('isAuthenticated');
-      const isAuth = authStatus === 'true';
-      setIsAuthenticated(isAuth);
+    const publicRoutes = ['/login', '/signup', '/', '/landing', '/auth/callback', '/auth/google/callback', '/terms', '/privacy', '/forgot-password', '/about', '/pricing', '/careers', '/careers/apply'];
+    const isPublicRoute = publicRoutes.includes(pathname) || pathname.startsWith('/landing');
+    const authed = isAuthenticated();
 
-      // Public routes (including auth callback for OAuth)
-      const publicRoutes = ['/login', '/signup', '/', '/landing', '/auth/callback', '/auth/google/callback', '/terms', '/privacy', '/forgot-password', '/about', '/pricing', '/careers', '/careers/apply'];
-      const isPublicRoute = publicRoutes.includes(pathname);
-
-      // Redirect logic
-      if (!isAuth && !isPublicRoute) {
-        router.push(`/login?redirect=${pathname}`);
-      } else if (isAuth && (pathname === '/login' || pathname === '/signup')) {
-        router.push('/dashboard');
-      }
-    };
-
-    checkAuth();
+    if (!authed && !isPublicRoute) {
+      router.push(`/login?redirect=${pathname}`);
+    } else if (authed && (pathname === '/login' || pathname === '/signup')) {
+      router.push('/dashboard');
+    }
+    setChecked(true);
   }, [pathname, router]);
 
-  // Show loading while checking auth
-  if (isAuthenticated === null) {
+  if (!checked) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
-        >
+        <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center">
           <Loader2 className="w-12 h-12 text-blue-500 animate-spin mx-auto mb-4" />
           <p className="text-gray-600 font-medium">Loading...</p>
         </motion.div>
