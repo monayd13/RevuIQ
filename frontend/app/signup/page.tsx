@@ -15,6 +15,8 @@ export default function SignupPage() {
     setError('');
     if (formData.password !== formData.confirmPassword) { setError('Passwords do not match'); return; }
     if (formData.password.length < 8) { setError('Password must be at least 8 characters'); return; }
+    if (!/[A-Z]/.test(formData.password)) { setError('Password must contain at least one uppercase letter'); return; }
+    if (!/[0-9]/.test(formData.password)) { setError('Password must contain at least one number'); return; }
 
     setLoading(true);
     try {
